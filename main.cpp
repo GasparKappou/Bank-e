@@ -612,7 +612,20 @@ namespace MenuyExt{
 	    SetConsoleWindowInfo(hConsole, TRUE, &rect);
 	}
 
+	//limpia y construye de nuevo el marco
 
+	void LimpiarInteriorMarco(short x1, short y1, short x2, short y2) {
+	    short anchoInterno = (x2 - x1) - 2;  // antes: -1
+
+	    string espacios(anchoInterno, ' ');
+
+	    for (short y = y1 + 1; y < y2; y++) {
+	        _gotoxy(x1 + 1, y);
+	        cout << espacios;
+	    }
+
+	    _gotoxy(x1 + 1, y1 + 1);
+	}
 	//Borra cierta cantidad de lugares en una linea
 
 	void Borrado(short c){
