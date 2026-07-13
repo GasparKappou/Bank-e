@@ -969,7 +969,7 @@ namespace User{
 }
 using namespace User;
 
-int main(){
+void SistemaHomeBanking(){
 	CreacionArchivos();	
     SetConsoleOutputCP(CP_UTF8);
     RedimensionarVentana(85, 24);
@@ -998,6 +998,9 @@ int main(){
 		_gotoxy(25, 11); cout << "Cajero Automático o al propio Banco";
 		_gotoxy(20, 12); Pausa();
 	}
-	
+}
+
+int main(){
+	SistemaHomeBanking();
 	return 0;
 }
