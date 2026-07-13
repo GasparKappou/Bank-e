@@ -10,16 +10,12 @@
 
 using namespace std;
 
-enum Colores { NEGRO = 0, AZUL = 1, VERDE = 2, CIAN = 3, ROJO = 4, MAGENTA = 5,
-                 MARRON = 6, GRIS_CLARO = 7, GRIS_OSCURO = 8, AZUL_CLARO = 9,
-                 VERDE_CLARO = 10, CIAN_CLARO = 11, ROJO_CLARO = 12,
-                 MAGENTA_CLARO = 13, AMARILLO = 14, BLANCO = 15
-             };
+
 
 typedef char str25[26];
 
 namespace MenuyExt {
-    void Borrado(short c); 
+    void Borrado(short c);
 }
 using namespace MenuyExt;
 
@@ -169,15 +165,15 @@ namespace Screen {
     MnsgBox(x2 - 1, y1, "╗");
     for (short i = 1; i < x2 - x1 - 1; i++)
         MnsgBox(x1 + i, y1, "═");
-        
-    for (short i = 1; i < y2 - y1 - 1; i++) { 
+
+    for (short i = 1; i < y2 - y1 - 1; i++) {
         MnsgBox(x1, y1 + i, "║");
         MnsgBox(x2 - 1, y1 + i, "║");
     }
-    MnsgBox(x1, y2 - 1, "╚"); 
-    MnsgBox(x2 - 1, y2 - 1, "╝"); 
+    MnsgBox(x1, y2 - 1, "╚");
+    MnsgBox(x2 - 1, y2 - 1, "╝");
     for (short i = 1; i < x2 - x1 - 1; i++)
-        MnsgBox(x1 + i, y2 - 1, "═"); 
+        MnsgBox(x1 + i, y2 - 1, "═");
   } // Marco
 
   string Separador(int ancho = 60, char car = '-') {
@@ -297,7 +293,7 @@ void BloquearCambioTamano(){
   } // MenuNavegar
 }
 namespace FechaHora {
-	
+
   long GetTime(int &hh, int &mm, int &ss) {
     time_t     rawtime;
     record tm *timeinfo;
@@ -344,18 +340,18 @@ namespace Archivos{
 	typedef record{
 		long fecha;
 		short dia, mes, anio;
-	    char tipoMov; 
+	    char tipoMov;
 	    char detalle[25];
 	    float importe;
 	}MovimientosCA;
-	
+
 	typedef record{
 		long fecha;
 		short dia, mes, anio;
 	    char detalle[25];
 	    float importe;
 	}MovimientosTD;
-	
+
 	typedef record{
 		long fecha;
 		short dia, mes, anio;
@@ -363,7 +359,7 @@ namespace Archivos{
 	    char cuotas[5];
 	    float importe;
 	}MovimientosTC;
-	
+
 	const char asuntosCA[5][25] = {
 	    "Dep._Haberes_Mensual",
 	    "Extraccion_Cajero_Link",
@@ -371,8 +367,8 @@ namespace Archivos{
 	    "Pago_Intereses_PlazoF",
 	    "Reintegro_Promocion_Bco"
 	};
-	
-	
+
+
 	const char asuntosTC[5][25] = {
 	    "Supermercado_COTO",
 	    "Estacion_Servicio_YPF",
@@ -380,8 +376,8 @@ namespace Archivos{
 	    "Compra_MercadoLibre",
 	    "Pasajes_Aerolineas_Arg"
 	};
-	
-	
+
+
 	const char asuntosTD[5][25] = {
 	    "Farmacia_Del_Centro",
 	    "Pago_Servicios_Luz",
@@ -389,76 +385,76 @@ namespace Archivos{
 	    "Restaurante_Comida_Rap",
 	    "Carniceria_La_Estancia"
 	};
-	
+
 	void ordenamiento(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[]){
 		bool intercambio;
-		
+
 		for (int i = 0; i < 15 - 1; i++) {
 		    intercambio = false;
-		
+
 		    for (int j = 0; j < 15 - 1 - i; j++) {
 		        if (datos_ca[j].fecha < datos_ca[j + 1].fecha) {
 		            swap(datos_ca[j], datos_ca[j + 1]);
 		            intercambio = true;
 		        }
 		    }
-		
+
 		    if (!intercambio)
 		        break;
 		}
-		
+
 		for (int i = 0; i < 15 - 1; i++) {
 		    intercambio = false;
-		
+
 		    for (int j = 0; j < 15 - 1 - i; j++) {
 		        if (datos_td[j].fecha < datos_td[j + 1].fecha) {
 		            swap(datos_td[j], datos_td[j + 1]);
 		            intercambio = true;
 		        }
 		    }
-		
+
 		    if (!intercambio)
 		        break;
 		}
-		
+
 		for (int i = 0; i < 15 - 1; i++) {
 		    intercambio = false;
-		
+
 		    for (int j = 0; j < 15 - 1 - i; j++) {
 		        if (datos_tc[j].fecha < datos_tc[j + 1].fecha) {
 		            swap(datos_tc[j], datos_tc[j + 1]);
 		            intercambio = true;
 		        }
 		    }
-		
+
 		    if (!intercambio)
 		        break;
-		}		
+		}
 	}
-	
+
 	void carga(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[]){
 		srand(time(NULL));
 		int diaHoy, mesHoy, anioHoy, ds;
-    
+
     for(short i = 0; i < 15; i++){
-        
-        short d = (rand() % 28) + 1;    
-        short m = (rand() % 12) + 1;   
-        short a = 2025 + (rand() % 2);  
-        
+
+        short d = (rand() % 28) + 1;
+        short m = (rand() % 12) + 1;
+        short a = 2025 + (rand() % 2);
+
         long fechaAleatoria = (a * 10000) + (m * 100) + d;
-        
+
         datos_ca[i].fecha = fechaAleatoria;
         datos_ca[i].dia = d;
         datos_ca[i].mes = m;
         datos_ca[i].anio = a;
         datos_ca[i].tipoMov = (i % 2 == 0) ? 'D' : 'H';
-        
+
         int indiceRandom = rand() % 5;
         strcpy(datos_ca[i].detalle, asuntosCA[indiceRandom]);
         datos_ca[i].importe = 123000.00 + (i * 1000.50);
     }
-    
+
 
     for(short i = 0; i < 15; i++){
         short d = (rand() % 28) + 1;
@@ -470,10 +466,10 @@ namespace Archivos{
         datos_td[i].dia = d;
         datos_td[i].mes = m;
         datos_td[i].anio = a;
-        
+
         int indiceRandom = rand() % 5;
         strcpy(datos_td[i].detalle, asuntosTD[indiceRandom]);
-        datos_td[i].importe = 4500.00 + (i * 100.00);           
+        datos_td[i].importe = 4500.00 + (i * 100.00);
     }
 
     for(short i = 0; i < 15; i++){
@@ -486,18 +482,18 @@ namespace Archivos{
         datos_tc[i].dia = d;
         datos_tc[i].mes = m;
         datos_tc[i].anio = a;
-        
+
         int indiceRandom = rand() % 5;
         strcpy(datos_tc[i].detalle, asuntosTC[indiceRandom]);
-        strcpy(datos_tc[i].cuotas, "01/03"); 
-        datos_tc[i].importe = 25000.00 + (i * 500.00);          
+        strcpy(datos_tc[i].cuotas, "01/03");
+        datos_tc[i].importe = 25000.00 + (i * 500.00);
     }
 	ordenamiento(datos_ca, datos_td, datos_tc);
 	}
-	
+
 	void impresion(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[]){
 	    ofstream archCA("MovimientosCA.Txt");
-	    ofstream archTD("MovimientosTD.Txt");    
+	    ofstream archTD("MovimientosTD.Txt");
 	    ofstream archTC("MovimientosTC.Txt");
 
 	    for(short i = 0; i < 15; i++) {
@@ -508,7 +504,7 @@ namespace Archivos{
 	               << left << setw(25) << datos_ca[i].detalle << " "
 	               << right << fixed << setprecision(2) << setw(11) << datos_ca[i].importe << endl;
 	    }
-    
+
 	    for(short i = 0; i < 15; i++) {
 	        archTD << right << setw(2) << datos_td[i].dia << " "
 	               << right << setw(2) << datos_td[i].mes << " "
@@ -528,14 +524,14 @@ namespace Archivos{
 
 	    archCA.close();
 	    archTD.close();
-	    archTC.close();		
+	    archTC.close();
 	}
-	
+
 	void CreacionArchivos(){
 		MovimientosCA datos_ca[100];
-		MovimientosTD datos_td[100];	
+		MovimientosTD datos_td[100];
 		MovimientosTC datos_tc[100];
-		
+
 		carga(datos_ca, datos_td, datos_tc);
 		impresion(datos_ca, datos_td, datos_tc);
 	}
@@ -546,28 +542,28 @@ namespace MenuyExt{
 	//tamaño de la ventana
 	void RedimensionarVentana(int ancho, int alto){
 	    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	    
+
 	    COORD coord = { (SHORT)ancho, (SHORT)alto };
 	    SMALL_RECT rect = { 0, 0, (SHORT)(ancho - 1), (SHORT)(alto - 1) };
-	    
+
 	    SMALL_RECT tempRect = { 0, 0, 1, 1 };
 	    SetConsoleWindowInfo(hConsole, TRUE, &tempRect);
-	    
+
 	    SetConsoleScreenBufferSize(hConsole, coord);
 	    SetConsoleWindowInfo(hConsole, TRUE, &rect);
 	}
-	
+
 	//limpia y construye de nuevo el marco
 	void LimpiarInteriorMarco(short x1, short y1, short x2, short y2) {
 	    short anchoInterno = (x2 - x1) - 2;  // antes: -1
-	    string espacios(anchoInterno, ' '); 
-	    
+	    string espacios(anchoInterno, ' ');
+
 	    for (short y = y1 + 1; y < y2; y++) {
-	        _gotoxy(x1 + 1, y); 
-	        cout << espacios;   
+	        _gotoxy(x1 + 1, y);
+	        cout << espacios;
 	    }
-	    
-	    _gotoxy(x1 + 1, y1 + 1); 
+
+	    _gotoxy(x1 + 1, y1 + 1);
 	}
 	//Borra cierta cantidad de lugares en una linea
 	void Borrado(short c){
@@ -575,18 +571,18 @@ namespace MenuyExt{
 			cout << " ";
 		}
 	}
-	
+
 	//Impresion de menu
 	void GenMenu(char aMenu[][25], short tam){
 		LimpiarInteriorMarco(2, 2, 81, 22);
 		_textcolor(3);
 		_gotoxy(50, 3);
 		cout << "HomeBanking Bank-e";
-		
+
 		_textcolor(2);
 		_gotoxy(10, 3);
 		cout << "Menú Dinámico";
-						
+
 		for(short i = 0; i < tam; i++){
 			_gotoxy(25,5 + i);
 			_textcolor(15);
@@ -599,24 +595,24 @@ namespace MenuyExt{
 		_textcolor(3);
 		_gotoxy(50, 3);
 		cout << "HomeBanking Bank-e";
-		
+
 		_textcolor(2);
 		_gotoxy(10, 3);
 		cout << titulo;
 	}
-	
+
 	//modificacion de funcion
 	void GetDate(int &year, int &mes, int &dia) {
 	    time_t     rawtime;
 	    struct tm *timeinfo;
-	
+
 	    time ( &rawtime );
 	    timeinfo = localtime ( &rawtime );
 	    year = 1900 + timeinfo->tm_year;
 	    mes  = 1 + timeinfo->tm_mon;
 	    dia  = timeinfo->tm_mday;
 	}
-	
+
 	//Registro de Usuario
 	typedef struct{
 		long dni;
@@ -630,47 +626,47 @@ namespace MenuyExt{
 		char nroCtaCA[40];
 		char cbu[40];
 	}RegUsuario;
-	
+
 	void OpcToken(){
 		OcultarCursor();
 		Plantilla("Generar Token");
 		srand(time(NULL));
-		
+
 		for(short i = 1; i <= 10; i++){
 			if(i <= 6){
 				Sleep(500);
 				_gotoxy(25 + i,10);
 				_textcolor(15);
 				short dig = rand() % 9 + 1;
-				cout << dig; 				
+				cout << dig;
 			}
-			
+
 			Sleep(500);
 			_gotoxy(35 + i,10);
 			_textcolor(2);
 			cout << "█";
-			
+
 			Sleep(500);
 			_gotoxy(50,10);
 			_textcolor(15);
-			cout << i * 10 << '%';	
+			cout << i * 10 << '%';
 		}
-		
-		_gotoxy(5,13);		
+
+		_gotoxy(5,13);
 		cout << "Se ha generado el Token correctamente";
 		_gotoxy(10,15);
 		Pausa();
 		OcultarCursor();
 	}
-	
+
 	void datosINV(float &cap,float &tasa,int time){
 		_textcolor(15);
 		_gotoxy(30,7); cout << "Capital: ";
 		_gotoxy(30,10); cout << "Tiempo: ";
 		_gotoxy(30,13); cout << "Tasa: ";
-		
+
 		_textcolor(14);
-		
+
 		do{
 			_gotoxy(40,7); cin >> cap;
 			if(cap < 0){
@@ -679,52 +675,52 @@ namespace MenuyExt{
 				_textcolor(4);
 				_gotoxy(30,8); cout << "*Error, capital menor a cero";
 				_textcolor(14);
-			}		
+			}
 		}while(cap < 0);
-		
+
 		_gotoxy(30,8);
 		Borrado(40);
-		
+
 		do{
 			_gotoxy(40,10); cin >> time;
 			if(time < 0){
 				_gotoxy(40,10);
 				Borrado(40);
 				_textcolor(4);
-				_gotoxy(30,11); cout << "*Error, tiempo menor a cero";	
+				_gotoxy(30,11); cout << "*Error, tiempo menor a cero";
 				_textcolor(14);
-			}		
+			}
 		}while(time < 0);
-		
+
 		_gotoxy(30,11);
 		Borrado(40);
-		
+
 		do{
 			_gotoxy(40,13); cin >> tasa;
 			if(tasa < 0){
 				_gotoxy(40,13);
 				Borrado(40);
 				_textcolor(4);
-				_gotoxy(30,14); cout << "*Error, tasa menor a cero";	
+				_gotoxy(30,14); cout << "*Error, tasa menor a cero";
 				_textcolor(14);
-			}		
+			}
 		}while(tasa < 0);
 	}
-	
+
 	void OpcSPF(){
 		OcultarCursor();
 		Plantilla("Simulación Plazo Fijo");
 		float cap, tasa;
 		int time;
 		datosINV(cap, tasa, time);
-		
+
 		_gotoxy(30,14);
 		Borrado(40);
-		
+
 		Sleep(1000);
 		_textcolor(2);
 		_gotoxy(30,15); cout << "Interés: $" << fixed << setprecision(2) << (cap * time * tasa) / 36500.0;
-			
+
 		_gotoxy(10,20);
 		Pausa();
 		OcultarCursor();
@@ -735,7 +731,7 @@ namespace MenuyExt{
 		stringstream contenidoViejo;
 		contenidoViejo << lectura.rdbuf();
 		lectura.close();
-		
+
 		ofstream escritura(nombreArchivo);
 		escritura << nuevaLinea << endl;
 		escritura << contenidoViejo.str();
@@ -748,18 +744,18 @@ namespace MenuyExt{
 		float cap, tasa;
 		int time;
 		datosINV(cap, tasa, time);
-		
+
 		_gotoxy(30,14);
 		Borrado(40);
-		
+
 		Sleep(1000);
 		_textcolor(2);
 		float inv = (cap * time * tasa) / 36500.0;
 		_gotoxy(30,15); cout << "Interés: $" << fixed << setprecision(2) << inv;
-		
+
 		int dia, mes, anio;
 		GetDate(anio,mes, dia);
-		
+
 		ostringstream  line;
 	    line << right << setw(2) << dia << " "
 	            << right << setw(2) << mes << " "
@@ -767,17 +763,17 @@ namespace MenuyExt{
 	            << 'H' << " "
 	            << left << setw(25) << "Inversion_Plazo_Fijo" << " "
 	            << right << fixed << setprecision(2) << setw(11) << inv;
-		
+
 		agregarLineaArriba("MovimientosCA.Txt", line.str());
-		
+
 		_gotoxy(10,20);
 		Pausa();
 		OcultarCursor();
 	}
-	
-	
+
+
 	void OpcDP(RegUsuario listaUsuarios[], short t){
-		
+
 		OcultarCursor();
 		Plantilla("Datos Personales");
 		_textcolor(15);
@@ -801,33 +797,33 @@ namespace MenuyExt{
 		cout << "Nro. Cte CA: " << listaUsuarios[t].nroCtaCA << endl;
 		_gotoxy(30,14);
 		cout << "CBU: " << listaUsuarios[t].cbu << endl;
-	
+
 		Sleep(3000);
 		_gotoxy(10,17);
 		Pausa();
-		OcultarCursor();		
+		OcultarCursor();
 	}
-	
+
 	void OpcCBU(RegUsuario listaUsuarios[], short t){
 		OcultarCursor();
 		Plantilla("Clave Única Bancaria");
 		_textcolor(15);
-		
+
 		_gotoxy(20,10);
 		cout << "CBU";
-		
+
 		_gotoxy(20,11);
-		cout << listaUsuarios[t].cbu;	
+		cout << listaUsuarios[t].cbu;
 		Sleep(3000);
 		_gotoxy(10,17);
 		Pausa();
-		OcultarCursor();		
+		OcultarCursor();
 	}
-	
+
 	void OpcCS(){
 		OcultarCursor();
 		LimpiarInteriorMarco(2, 2, 81, 22);
-		
+
 		_textcolor(2);
 		_gotoxy(25,11);
 		cout << "Sesion Cerrada";
@@ -837,18 +833,18 @@ namespace MenuyExt{
 		_textcolor(3);
 		_gotoxy(25,13);
 		cout << "Bank-e";
-		
+
 		Sleep(3000);
 		_gotoxy(10,17);
 		Pausa();
-		OcultarCursor();								
+		OcultarCursor();
 	}
 }
 using namespace MenuyExt;
 
 namespace User{
-	
-	
+
+
 	short Busqueda(RegUsuario listaUsuarios[], char UserNom[], long UserDNI, char UserClave[]){
 		short k = -1;
 		for(int i = 0; i < MAX_USUARIOS; i++){
@@ -858,9 +854,9 @@ namespace User{
 		}
 		return k;
 	}
-	
+
 	short IniciarSesion(RegUsuario listaUsuarios[]){
-		
+
 		short i = 0;
 		short t;
 		char UserNom[40];
@@ -869,53 +865,53 @@ namespace User{
 		_textcolor(3);
 		_gotoxy(50, 3);
 		cout << "HomeBanking Bank-e";
-		
+
 		_textcolor(15);
 		_gotoxy(10, 3);
 		cout << "LOGIN";
 			_gotoxy(20, 7); cout << "Nombre de Usuario: " << endl;
 			_gotoxy(20, 10); cout << "DNI: " << endl;
-			_gotoxy(20, 13); cout << "Contraseña: " << endl;		
+			_gotoxy(20, 13); cout << "Contraseña: " << endl;
 		do{
 			_gotoxy(40, 7);
 			Borrado(40);
 			_gotoxy(40, 7);
 			cin.getline(UserNom, 40);
-			
+
 			_gotoxy(40, 10);
 			Borrado(40);
-			_gotoxy(40, 10);      
+			_gotoxy(40, 10);
 			cin >> UserDNI;
 			cin.ignore(1000,'\n');
-			
+
 			_gotoxy(40, 13);
 			Borrado(20);
 			_gotoxy(40, 13);
 			cin.getline(UserClav, 20);
 			t = Busqueda(listaUsuarios, UserNom, UserDNI, UserClav);
-			
+
 			if(t == -1){
 				_gotoxy(5, 18);
 				cout << "Datos incorrectos (" << i + 1 << "/3)";
 				_gotoxy(10, 18);
-				Espera(5000); 
+				Espera(5000);
 				i++;
 			}
 		}while(t == -1 && i < 3);
 		return t;
 	}
-	
+
 	void MenuUser(RegUsuario listaUsuarios[], short t){
 		short tam = 12;
-		char aMenu[12][25] = {{"Token"}, 
-							{"Simulacion Plazo Fijo"}, 
-							{"Inversion Plazo Fijo"}, 
+		char aMenu[12][25] = {{"Token"},
+							{"Simulacion Plazo Fijo"},
+							{"Inversion Plazo Fijo"},
 							{"Datos Personales"},
 							{"CBU"},
-							{"Movimientos CA"}, 
+							{"Movimientos CA"},
 							{"Movimientos TD"},
-							{"Movimientos TC"},	
-							{"Deposito"}, 
+							{"Movimientos TC"},
+							{"Deposito"},
 							{"Compra"},
 							{"Ordenar Usuarios"},
 							{"Cerrar Sesion"}};
@@ -944,7 +940,7 @@ namespace User{
 				case 5:
 					OpcMCA(listaUsuarios[]);
 					break;
-				
+
 				case 6:
 					OpcMTD(listaUsuarios[]);
 					break;
@@ -970,15 +966,15 @@ namespace User{
 using namespace User;
 
 int main(){
-	CreacionArchivos();	
+	CreacionArchivos();
     SetConsoleOutputCP(CP_UTF8);
     RedimensionarVentana(85, 24);
     BloquearCambioTamano();
     BarraTitulo();
     _clrscr();
-    
-  	Marco(2, 2, 81, 23, 3);	 
-	 
+
+  	Marco(2, 2, 81, 23, 3);
+
     // Inicialización de los 5 usuarios
     RegUsuario listaUsuarios[MAX_USUARIOS] = {
         {12345678, "Juan Gonzalez", "01/01/1990", "jgonz", "clave1", "1234", "a@a.com", "Calle 1", "CA-001", "00000001"},
@@ -986,18 +982,18 @@ int main(){
         {33444555, "Lopez Luis", "10/03/1985", "llopez", "clave3", "9101", "c@c.com", "Calle 3", "CA-003", "00000003"},
         {44555666, "Diaz Carla", "15/04/1995", "cdiaz", "clave4", "1122", "d@d.com", "Calle 4", "CA-004", "00000004"},
         {55666777, "Ruiz Pedro", "20/05/1988", "pruiz", "clave5", "3344", "e@e.com", "Calle 5", "CA-005", "00000005"}
-    }; 
-	
-	
+    };
+
+
 	short t = IniciarSesion(listaUsuarios);
 	if(t != -1){
 		MenuUser(listaUsuarios, t);
 	}else{
 		LimpiarInteriorMarco(2, 2, 81, 22);
-		_gotoxy(25, 10); cout << "Ud. Deberá dirigirse a un" << endl; 
+		_gotoxy(25, 10); cout << "Ud. Deberá dirigirse a un" << endl;
 		_gotoxy(25, 11); cout << "Cajero Automático o al propio Banco";
 		_gotoxy(20, 12); Pausa();
 	}
-	
+
 	return 0;
 }
