@@ -231,6 +231,24 @@ namespace Screen {
     }
   } // Pausa
 
+  void Pausa(int y) {
+	  short i = 1;
+        string mensg="";
+    MnsgBox(12,8,mensg);
+    GetAsyncKeyState(VK_SPACE);
+    while(not GetAsyncKeyState(VK_SPACE)) {
+			_textbackground(8);
+  	  MnsgBox(5,y,i,"Oprima la tecla");
+  	  setConsoleColor(AZUL,VERDE);
+	    MnsgBox(21,y,AMARILLO+16*VERDE,"ESPACIO");
+		  _textbackground(8);
+	    MnsgBox(29,y,i++,"para continuar...");
+  	  Sleep(1000);
+	    if (i == 16)
+		  	i = 1;
+    }
+  } // Pausa
+
 void BloquearCambioTamano(){
     HWND hwnd = GetConsoleWindow(); // Obtiene identificador de la ventana.
     // Obtiene los estilos actuales de la ventana
@@ -824,6 +842,74 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
+	void OpcMTD(RegUsuario listaUsuarios[], short t){
+		ifstream archivo("MovimientosTD.Txt");
+		string linea;
+        int cantLin;
+
+        while (getline(archivo, linea)) {
+            cantLin++;
+        }
+        archivo.close();
+
+        RedimensionarVentana(85, cantLin+8);
+        LimpiarInteriorMarco(2, 2, 85, cantLin+6);
+		OcultarCursor();
+		Plantilla("Movimientos de Tarjeta de Débito");
+		Marco(2, 2, 81, cantLin+6, AZUL_CLARO);
+		_textcolor(15);
+        _gotoxy(10,4);
+		FechaHoy();
+        _gotoxy(15,7);
+		cout << Separador(48, '-');
+		_gotoxy(15,8);
+		cout << "     Fecha Descripcion                   Importe" << endl;
+        _gotoxy(15,9);
+        cout << Separador(48, '-');
+        _textcolor(ROJO_CLARO);
+
+        archivo.open("MovimientosTD.Txt");
+
+        for(int i = 0; i < cantLin; i++){
+            getline(archivo, linea);
+            _gotoxy(15, cantLin-2-i);
+            cout << linea;
+        }
+
+        archivo.close();
+        archivo.open("MovimientosTD.Txt");
+        int dia, mes, anio;
+        string descripcion;
+        double monto, montoFinal = 0;
+
+
+        for(int i = 0; i < cantLin; i++){
+            while(archivo >> dia >> mes >> anio >> descripcion >> monto){
+                montoFinal += monto;
+                _gotoxy(15, cantLin-2-i);
+                //cout << dia << "-" << mes << "-" << anio << "-" << descripcion << "-" << monto;
+            }
+        }
+
+        ostringstream stream;
+        stream << fixed << setprecision(2) << montoFinal;
+
+        string textoMonto = stream.str();
+
+        _textcolor(BLANCO);
+        _gotoxy(15,cantLin-1);
+		cout << Separador(48, '-');
+		MnsgBox(15, cantLin, textoMonto, 'd', 48);
+		_gotoxy(15,cantLin);
+		cout << "                        Total TD: $" << endl;
+        _gotoxy(15,cantLin+1);
+        cout << Separador(48, '-');
+
+		Sleep(3000);
+		Pausa(cantLin+4);
+		OcultarCursor();
+	}
+
 	void OpcCS(){
 		OcultarCursor();
 		LimpiarInteriorMarco(2, 2, 81, 22);
@@ -945,11 +1031,10 @@ namespace User{
 					/*
 				case 5:
 					OpcMCA(listaUsuarios[]);
-					break;
-
+					break;*/
 				case 6:
-					OpcMTD(listaUsuarios[]);
-					break;
+					OpcMTD(listaUsuarios, t);
+					break;/*
 				case 7:
 					OpcMTC(listaUsuarios[]);
 					break;
@@ -987,7 +1072,7 @@ int main(){
         {22333444, "Gomez Ana", "05/02/1992", "agomez", "clave2", "5678", "b@b.com", "Calle 2", "CA-002", "00000002"},
         {33444555, "Lopez Luis", "10/03/1985", "llopez", "clave3", "9101", "c@c.com", "Calle 3", "CA-003", "00000003"},
         {44555666, "Diaz Carla", "15/04/1995", "cdiaz", "clave4", "1122", "d@d.com", "Calle 4", "CA-004", "00000004"},
-        {55666777, "Ruiz Pedro", "20/05/1988", "pruiz", "clave5", "3344", "e@e.com", "Calle 5", "CA-005", "00000005"}
+        {1, "1", "1", "1", "1", "1", "1", "1", "1", "1"}
     };
 
 
