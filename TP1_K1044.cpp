@@ -857,7 +857,7 @@ namespace MenuyExt{
 		OcultarCursor();
 		Plantilla("Movimientos de Tarjeta de Débito");
 		Marco(2, 2, 81, cantLin+6, AZUL_CLARO);
-		_textcolor(15);
+		_textcolor(BLANCO);
         _gotoxy(10,4);
 		FechaHoy();
         _gotoxy(15,7);
