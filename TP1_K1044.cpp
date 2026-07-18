@@ -873,15 +873,18 @@ namespace MenuyExt{
 	            << 'D' << " "
 	            << left << setw(25) << "Deposito" << " "
 	            << right << fixed << setprecision(2) << setw(11) << cap;
-		
-		agregarLineaArriba("MovimientosCA.Txt", line.str());
+	
 		
 		Sleep(3000);
 		_gotoxy(10,17);
 		Pausa();
 		OcultarCursor();	
 	}
-
+	
+	//Agregar lineas a sus respectivos archivos en los modulos de compra y deposito
+	//Ordenar dichas lineas
+	//Borrar los textos de error una vez que se escribe bien (mirar modulo "Inversion de capital")
+	//ordenamiento();
 	void OpcCom(){
 		OcultarCursor();
 		Plantilla("Compra");
@@ -928,7 +931,7 @@ namespace MenuyExt{
 		}while(det.length() > 25);
 
 		do{
-			_gotoxy(40,16); cin >> tipo;
+			_gotoxy(41,16); cin >> tipo;
 			if(tipo != "D" && tipo != "C"){
 				_gotoxy(40,16);
 				Borrado(40);
@@ -961,13 +964,13 @@ namespace MenuyExt{
 	            	<< right << setw(2) << mes << " "
 	            	<< right << setw(4) << anio<< " "
 	            	<< left << setw(25) << det << " "
-					<< right << setw(5) << "     "
+					<< right << setw(5) << "     " << " "
 	            	<< right << fixed << setprecision(2) << setw(11) << cap;
-			agregarLineaArriba("MovimientosTC.Txt", line.str());
+	    //agregar a movimientosTC
 		}	
 		
 		Sleep(3000);
-		_gotoxy(10,17);
+		_gotoxy(10,19);
 		Pausa();
 		OcultarCursor();	
 	}
