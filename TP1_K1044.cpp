@@ -824,6 +824,154 @@ namespace MenuyExt{
 		OcultarCursor();		
 	}
 	
+	void OpcDep(){
+		OcultarCursor();
+		Plantilla("Deposito");
+		_textcolor(15);
+		float cap;
+		char fecha[11];
+		int dia, mes, anio;
+		string det;
+
+		_gotoxy(30,7); cout << "Fecha: ";
+		_gotoxy(30,10); cout << "Monto: ";
+		_gotoxy(30,13); cout << "Detalle: ";
+		
+		_textcolor(14);
+		
+		_gotoxy(40,7); cin >> fecha;
+		stringstream ss(fecha);
+		char barra;
+		ss >> dia >> barra >> mes >> barra >> anio;
+
+		do{
+			_gotoxy(40,10); cin >> cap;
+			if(cap < 0){
+				_gotoxy(40,10);
+				Borrado(40);
+				_textcolor(4);
+				_gotoxy(30,11); cout << "*Error, monto menor a cero";
+				_textcolor(14);
+			}		
+		}while(cap < 0);
+
+		do{
+			_gotoxy(40,13); cin >> det;
+			if(det.length() > 25){
+				_gotoxy(40,13);
+				Borrado(40);
+				_textcolor(4);
+				_gotoxy(30,14); cout << "*Error, detalle demasiado largo";
+				_textcolor(14);
+			}		
+		}while(det.length() > 25);
+
+		ostringstream  line;
+	    line << right << setw(2) << dia << " "
+	            << right << setw(2) << mes << " "
+	            << right << setw(4) << anio<< " "
+	            << 'D' << " "
+	            << left << setw(25) << "Deposito" << " "
+	            << right << fixed << setprecision(2) << setw(11) << cap;
+		
+		agregarLineaArriba("MovimientosCA.Txt", line.str());
+		
+		Sleep(3000);
+		_gotoxy(10,17);
+		Pausa();
+		OcultarCursor();	
+	}
+
+	void OpcCom(){
+		OcultarCursor();
+		Plantilla("Compra");
+		_textcolor(15);
+		float cap;
+		char fecha[11];
+		int dia, mes, anio;
+		string det;
+		string tipo;
+
+		_gotoxy(30,7); cout << "Fecha: ";
+		_gotoxy(30,10); cout << "Monto: ";
+		_gotoxy(30,13); cout << "Detalle: ";
+		_gotoxy(30,16); cout << "Monto D,C: ";
+		
+
+		_textcolor(14);
+		
+		_gotoxy(40,7); cin >> fecha;
+		stringstream ss(fecha);
+		char barra;
+		ss >> dia >> barra >> mes >> barra >> anio;
+
+		do{
+			_gotoxy(40,10); cin >> cap;
+			if(cap < 0){
+				_gotoxy(40,10);
+				Borrado(40);
+				_textcolor(4);
+				_gotoxy(30,11); cout << "*Error, monto menor a cero";
+				_textcolor(14);
+			}		
+		}while(cap < 0);
+
+		do{
+			_gotoxy(40,13); cin >> det;
+			if(det.length() > 25){
+				_gotoxy(40,13);
+				Borrado(40);
+				_textcolor(4);
+				_gotoxy(30,14); cout << "*Error, detalle demasiado largo";
+				_textcolor(14);
+			}		
+		}while(det.length() > 25);
+
+		do{
+			_gotoxy(40,16); cin >> tipo;
+			if(tipo != "D" && tipo != "C"){
+				_gotoxy(40,16);
+				Borrado(40);
+				_textcolor(4);
+				_gotoxy(30,17); cout << "*Error, modo no válido";
+				_textcolor(14);
+			}		
+		}while(tipo != "D" && tipo != "C");
+
+		ostringstream  line;
+	    line << right << setw(2) << dia << " "
+	            << right << setw(2) << mes << " "
+	            << right << setw(4) << anio<< " "
+	            << 'H' << " "
+	            << left << setw(25) << det << " "
+	            << right << fixed << setprecision(2) << setw(11) << cap;
+		agregarLineaArriba("MovimientosCA.Txt", line.str());
+
+		if (tipo == "D"){
+			ostringstream  line;
+	   		line << right << setw(2) << dia << " "
+	            	<< right << setw(2) << mes << " "
+	            	<< right << setw(4) << anio<< " "
+	            	<< left << setw(25) << det << " "
+	            	<< right << fixed << setprecision(2) << setw(11) << cap;
+			agregarLineaArriba("MovimientosTD.Txt", line.str());
+		}else{
+			ostringstream  line;
+	   		line << right << setw(2) << dia << " "
+	            	<< right << setw(2) << mes << " "
+	            	<< right << setw(4) << anio<< " "
+	            	<< left << setw(25) << det << " "
+					<< right << setw(5) << "     "
+	            	<< right << fixed << setprecision(2) << setw(11) << cap;
+			agregarLineaArriba("MovimientosTC.Txt", line.str());
+		}	
+		
+		Sleep(3000);
+		_gotoxy(10,17);
+		Pausa();
+		OcultarCursor();	
+	}
+
 	void OpcCS(){
 		OcultarCursor();
 		LimpiarInteriorMarco(2, 2, 81, 22);
@@ -944,19 +1092,18 @@ namespace User{
 				case 5:
 					OpcMCA(listaUsuarios[]);
 					break;
-				
 				case 6:
 					OpcMTD(listaUsuarios[]);
 					break;
 				case 7:
 					OpcMTC(listaUsuarios[]);
-					break;
+					break;*/
 				case 8:
-					OpcDep(listaUsuarios[]);
+					OpcDep();
 					break;
 				case 9:
-					OpcCom(listaUsuarios[]);
-					break;
+					OpcCom();
+					break;/*
 				case 10:
 					OpcOU(listaUsuarios[]);
 					break;*/
