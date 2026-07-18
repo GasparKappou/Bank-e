@@ -474,7 +474,7 @@ namespace Archivos{
 
         int indiceRandom = rand() % 5;
         strcpy(datos_ca[i].detalle, asuntosCA[indiceRandom]);
-        datos_ca[i].importe = 123000.00 + (i * 1000.50);
+        datos_ca[i].importe = rand() % 10000;
     }
 
 
@@ -491,7 +491,7 @@ namespace Archivos{
 
         int indiceRandom = rand() % 5;
         strcpy(datos_td[i].detalle, asuntosTD[indiceRandom]);
-        datos_td[i].importe = 4500.00 + (i * 100.00);
+        datos_td[i].importe = rand() % 100000;
     }
 
     for(short i = 0; i < 15; i++){
@@ -508,7 +508,7 @@ namespace Archivos{
         int indiceRandom = rand() % 5;
         strcpy(datos_tc[i].detalle, asuntosTC[indiceRandom]);
         strcpy(datos_tc[i].cuotas, "01/03");
-        datos_tc[i].importe = 25000.00 + (i * 500.00);
+        datos_tc[i].importe = rand() % 25000;
     }
 	ordenamiento(datos_ca, datos_td, datos_tc);
 	}
