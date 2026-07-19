@@ -252,6 +252,9 @@ void BloquearCambioTamano(){
     MnsgBox(6,21,"Tecla ESCAPE seleccionar la opción del menú");
     //GoToXY(cIni,lIni);
     _gotoxy(cIni,lIni);
+	GetAsyncKeyState(VK_ESCAPE);
+	GetAsyncKeyState(VK_UP);
+	GetAsyncKeyState(VK_DOWN);
     while(not GetAsyncKeyState(VK_ESCAPE)) {
       Sleep(200);
       if (GetAsyncKeyState(VK_UP)) {
