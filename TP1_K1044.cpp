@@ -19,7 +19,7 @@ enum Colores { NEGRO = 0, AZUL = 1, VERDE = 2, CIAN = 3, ROJO = 4, MAGENTA = 5,
 typedef char str25[26];
 
 namespace MenuyExt {
-    void Borrado(short c); 
+    void Borrado(short c, short d, short e); 
 }
 using namespace MenuyExt;
 
@@ -205,8 +205,7 @@ namespace Screen {
   	MnsgBox(5,20,"Espere "+to_string(tiempo/1000)+" segundos");
 		_textcolor(15);
     Sleep(tiempo);
-    _gotoxy(5,20);
-    Borrado(30);
+    Borrado(30, 5, 20);
   } // Espera
 
   void BarraTitulo() {
@@ -573,10 +572,12 @@ namespace MenuyExt{
 	    _gotoxy(x1 + 1, y1 + 1); 
 	}
 	//Borra cierta cantidad de lugares en una linea
-	void Borrado(short c){
+	void Borrado(short c, short d, short e){
+		_gotoxy(d, e);
 		for(short i = 0; i < c; i++){
 			cout << " ";
 		}
+		_gotoxy(d, e);
 	}
 	
 	//Impresion de menu
@@ -677,36 +678,31 @@ namespace MenuyExt{
 		do{
 			_gotoxy(40,7); cin >> cap;
 			if(cap < 0){
-				_gotoxy(40,7);
-				Borrado(40);
+				Borrado(40, 40,7);
 				_textcolor(4);
 				_gotoxy(30,8); cout << "*Error, capital menor a cero";
 				_textcolor(14);
 			}		
 		}while(cap < 0);
 		
-		_gotoxy(30,8);
-		Borrado(40);
+		Borrado(40, 30, 8);
 		
 		do{
 			_gotoxy(40,10); cin >> time;
 			if(time < 0){
-				_gotoxy(40,10);
-				Borrado(40);
+				Borrado(40, 40, 10);
 				_textcolor(4);
 				_gotoxy(30,11); cout << "*Error, tiempo menor a cero";	
 				_textcolor(14);
 			}		
 		}while(time < 0);
 		
-		_gotoxy(30,11);
-		Borrado(40);
+		Borrado(40, 30, 11);
 		
 		do{
 			_gotoxy(40,13); cin >> tasa;
 			if(tasa < 0){
-				_gotoxy(40,13);
-				Borrado(40);
+				Borrado(40, 40,13);
 				_textcolor(4);
 				_gotoxy(30,14); cout << "*Error, tasa menor a cero";	
 				_textcolor(14);
@@ -721,8 +717,7 @@ namespace MenuyExt{
 		int time;
 		datosINV(cap, tasa, time);
 		
-		_gotoxy(30,14);
-		Borrado(40);
+		Borrado(40,30,14);
 		
 		Sleep(1000);
 		_textcolor(2);
@@ -752,8 +747,8 @@ namespace MenuyExt{
 		int time;
 		datosINV(cap, tasa, time);
 		
-		_gotoxy(30,14);
-		Borrado(40);
+
+		Borrado(40,30,14);
 		
 		Sleep(1000);
 		_textcolor(2);
@@ -880,20 +875,14 @@ namespace User{
 			_gotoxy(20, 10); cout << "DNI: " << endl;
 			_gotoxy(20, 13); cout << "Contraseña: " << endl;		
 		do{
-			_gotoxy(40, 7);
-			Borrado(40);
-			_gotoxy(40, 7);
+			Borrado(40,40, 7);
 			cin.getline(UserNom, 40);
 			
-			_gotoxy(40, 10);
-			Borrado(40);
-			_gotoxy(40, 10);      
+			Borrado(40,40, 10); 
 			cin >> UserDNI;
 			cin.ignore(1000,'\n');
 			
-			_gotoxy(40, 13);
-			Borrado(20);
-			_gotoxy(40, 13);
+			Borrado(20, 40, 13);
 			cin.getline(UserClav, 20);
 			t = Busqueda(listaUsuarios, UserNom, UserDNI, UserClav);
 			
@@ -992,7 +981,7 @@ void SistemaHomeBanking(){
     }; 
 	
 	
-	short t = IniciarSesion(listaUsuarios);
+	short t = 1; //IniciarSesion(listaUsuarios);
 	if(t != -1){
 		MenuUser(listaUsuarios, t);
 	}else{
