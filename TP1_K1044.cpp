@@ -6,6 +6,9 @@
 #include <windows.h>
 #include <cstdlib>
 #include <sstream>
+#include <algorithm> 
+#include <vector> 
+#include <string> 
 #define record struct
 
 using namespace std;
@@ -786,7 +789,7 @@ namespace MenuyExt{
 		_gotoxy(30,6);
 		cout << "Ape. Nom: " << listaUsuarios[t].apellidoNombre << endl;
 		_gotoxy(30,7);
-		cout << "Fecha Nac: " << listaUsuarios[t].apellidoNombre << endl;
+		cout << "Fecha Nac: " << listaUsuarios[t].fecNac << endl;
 		_gotoxy(30,8);
 		cout << "Usuario: " << listaUsuarios[t].usu << endl;
 		_gotoxy(30,9);
@@ -824,6 +827,171 @@ namespace MenuyExt{
 		OcultarCursor();		
 	}
 	
+	struct Movimiento {
+    int dia, mes, anio;
+    char tipo;
+    string detalle;
+    double importe;
+    double saldo;       // saldo después de este movimiento
+	};
+	void OpcMCA() {
+    system("cls");
+    // Encabezado general
+    cout << "Bank-e\n" << endl;
+    FechaHora::FechaHoy();  // muestra la fecha actual
+    cout << "\nMovimientos Caja de Ahorros Bank-e" << endl;
+    cout << "----------------------------------------------------------------------------------------------" << endl;
+    ifstream archivo("MovimientosCA.txt");
+    if (!archivo) {
+        cout << "Error al abrir el archivo." << endl;
+        cin.get();
+        return;
+    }
+    vector<Movimiento> movs;
+    string linea;
+    // Lectura del archivo
+    while (getline(archivo, linea)) {
+        if (linea.empty()) continue;
+        size_t pos = linea.rfind(' ');
+        if (pos == string::npos) continue;
+        string importeStr = linea.substr(pos + 1);
+        string resto = linea.substr(0, pos);
+        stringstream ss(resto);
+        Movimiento m;
+        ss >> m.dia >> m.mes >> m.anio >> m.tipo;
+        getline(ss, m.detalle);
+        if (!m.detalle.empty() && m.detalle[0] == ' ') {
+            m.detalle.erase(0, 1);
+        }
+        m.importe = stod(importeStr);
+        m.saldo = 0.0;
+        movs.push_back(m);
+    }
+    archivo.close();
+    // Ordenar por fecha ascendente
+    sort(movs.begin(), movs.end(), [](const Movimiento& a, const Movimiento& b) {
+        if (a.anio != b.anio) return a.anio < b.anio;
+        if (a.mes != b.mes) return a.mes < b.mes;
+        return a.dia < b.dia;
+    });
+    // Calcular saldo acumulado
+    double saldoAcum = 0.0;
+    for (auto& m : movs) {
+        if (m.tipo == 'D'){
+            saldoAcum += m.importe;
+        }
+        else if (m.tipo == 'H'){
+            saldoAcum -= m.importe;
+			}
+			m.saldo = saldoAcum;
+    }
+    cout << setw(10) << left << "Fecha" << setw(1)  << left << " T " << setw(27) << left << "Descripción" << setw(12) << right << "Debe" << setw(12) << right << "Haber" << setw(12) << right << "Saldo\n" << "----------------------------------------------------------------------------------------------" << endl;
+    // Mostrar movimientos en orden descendente (más reciente primero)
+    for (auto it = movs.rbegin(); it != movs.rend(); ++it) {
+        const Movimiento& m = *it;
+        // Formatear fecha con ceros a la izquierda (dd-mm-aaaa)
+        ostringstream fechaStream;
+        fechaStream << setw(2) << setfill('0') << m.dia << "-"
+                    << setw(2) << setfill('0') << m.mes << "-"
+                    << m.anio;
+        string fecha = fechaStream.str();
+        // Formatear Debe y Haber
+        ostringstream oss;
+        string debeStr, haberStr;
+        if (m.tipo == 'D') {
+            oss << fixed << setprecision(2) << m.importe;
+            debeStr = oss.str();
+            haberStr = string(11, ' ');
+        } else { // tipo 'H'
+            oss << fixed << setprecision(2) << m.importe;
+            haberStr = oss.str();
+            debeStr = string(11, ' ');
+        }
+        // Formatear saldo
+        ostringstream saldoStream;
+        saldoStream << fixed << setprecision(2) << m.saldo;
+        string saldoStr = saldoStream.str();
+        cout << setw(11) << left << fecha<< setw(3)  << left << m.tipo << setw(27) << left << m.detalle << setw(12) << right << debeStr << setw(12) << right << haberStr << setw(13) << right << saldoStr << endl;
+    }
+    cout << "---------------------------------------------------------------------------------------------- \n\n\n\n\n\n\n\n\n\n\n\n" << endl;
+    Pausa();
+    _textbackground(0);
+	_textcolor(15);
+	system("cls");
+	Marco(2,2,81,23,3);
+	}
+	
+	void OpcMTC(){
+    system("cls");
+    cout << "Bank-e\n" << endl;
+    FechaHora::FechaHoy();
+    cout << "\nMovimientos Tarjeta de crédito Bank-e" << endl;
+    cout << "----------------------------------------------------------------------------------------------" << endl;
+
+    struct Mov { int d, m, a; string desc, cuotas; double imp; };
+    ifstream f("MovimientosTC.txt");
+    vector<Mov> v;
+    string l;
+    while (getline(f, l)) {
+        if (l.empty() || l.find("Total") != string::npos) continue;
+        size_t p = l.find_last_of(' ');
+        double imp = stod(l.substr(p + 1));
+        string resto = l.substr(0, p);
+        size_t p2 = resto.find_last_of(' ');
+        string cuota = "";
+        if (p2 != string::npos) {
+            string tok = resto.substr(p2 + 1);
+            if (tok.find('/') != string::npos) {
+                // Filtrar solo dígitos y '/'
+                for (char c : tok) if ((c >= '0' && c <= '9') || c == '/') cuota.push_back(c);
+                resto = resto.substr(0, p2);
+            }
+        }
+        stringstream ss(resto);
+        int d, m, a;
+        string desc;
+        ss >> d >> m >> a;
+        getline(ss, desc);
+        // Recortar espacios
+        size_t start = desc.find_first_not_of(" \t\n\r\f\v");
+        if (start != string::npos) desc.erase(0, start);
+        size_t end = desc.find_last_not_of(" \t\n\r\f\v");
+        if (end != string::npos) desc.erase(end + 1);
+        Mov mov; mov.d=d; mov.m=m; mov.a=a; mov.desc=desc;
+        mov.cuotas = cuota;  // Asignar directamente (ya limpia)
+        mov.imp=imp;
+        v.push_back(mov);
+    }
+    f.close();
+
+    sort(v.begin(), v.end(), [](const Mov& a, const Mov& b) {
+        if (a.a != b.a) return a.a < b.a;
+        if (a.m != b.m) return a.m < b.m;
+        return a.d < b.d;
+    });
+
+    cout << left << setw(12) << "Fecha" << setw(27) << "Descripción"
+         << setw(17) << "Cuotas" << right << setw(12) << "Importe\n";
+    cout << "----------------------------------------------------------------------------------------------\n";
+    double total = 0;
+    for (auto& m : v) {
+        ostringstream fs, is;
+        fs << setw(2) << setfill('0') << m.d << '-' << setw(2) << setfill('0') << m.m << '-' << m.a;
+        is << fixed << setprecision(2) << m.imp;
+        cout << left << setw(12) << fs.str() << setw(30) << m.desc
+             << setw(12) << m.cuotas << right << setw(12) << is.str() << endl;
+        total += m.imp;
+    }
+    cout << "----------------------------------------------------------------------------------------------\n";
+    cout << right << setw(54) << "Total a pagar: $ " << fixed << setprecision(2) << total << endl;
+    cout << "----------------------------------------------------------------------------------------------\n\n\n\n\n\n\n\n\n\n\n\n\n";
+    Pausa();
+    _textbackground(0);
+	_textcolor(15);
+	system("cls");
+	Marco(2,2,81,23,3);
+}
+
 	void OpcCS(){
 		OcultarCursor();
 		LimpiarInteriorMarco(2, 2, 81, 22);
@@ -939,18 +1107,18 @@ namespace User{
 					break;
 				case 4:
 					OpcCBU(listaUsuarios, t);
-					break;
-					/*
+					break;	
 				case 5:
-					OpcMCA(listaUsuarios[]);
+					OpcMCA();
 					break;
-				
+				/*
 				case 6:
 					OpcMTD(listaUsuarios[]);
-					break;
+					break;*/
 				case 7:
-					OpcMTC(listaUsuarios[]);
+					OpcMTC();
 					break;
+					/*
 				case 8:
 					OpcDep(listaUsuarios[]);
 					break;

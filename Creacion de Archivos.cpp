@@ -256,5 +256,6 @@ using namespace FechaHora;
 	int main(){
 		cout << "Iniciando generador de archivos base..." << endl;
 		CreacionArchivos();	
+		cin.get();
 		return 0;
 	}
