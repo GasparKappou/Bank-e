@@ -981,7 +981,7 @@ void SistemaHomeBanking(){
     }; 
 	
 	
-	short t = 1; //IniciarSesion(listaUsuarios);
+	short t = IniciarSesion(listaUsuarios);
 	if(t != -1){
 		MenuUser(listaUsuarios, t);
 	}else{
