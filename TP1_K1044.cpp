@@ -393,7 +393,6 @@ namespace Archivos{
 	    "Reintegro_Promocion_Bco"
 	};
 
-
 	const char asuntosTC[5][25] = {
 	    "Supermercado_COTO",
 	    "Estacion_Servicio_YPF",
@@ -567,6 +566,147 @@ namespace Archivos{
 
 		carga(datos_ca, datos_td, datos_tc);
 		impresion(datos_ca, datos_td, datos_tc, 15, 15, 15);
+	}
+	
+	double CalcularTotal(const string& nombreArchivo){
+	    ifstream archivo(nombreArchivo);
+	    int d, m, a;
+	    string descripcion;
+	    double monto, total = 0;
+	    while(archivo >> d >> m >> a >> descripcion >> monto){
+	        total += monto;
+	    }
+	    archivo.close();
+	    return total;
+	}
+	
+	void agregarLineaArriba(string nombreArchivo, string nuevaLinea){
+		ifstream lectura(nombreArchivo);
+		stringstream contenidoViejo;
+		contenidoViejo << lectura.rdbuf();
+		lectura.close();
+
+		ofstream escritura(nombreArchivo);
+		escritura << nuevaLinea << endl;
+		escritura << contenidoViejo.str();
+		escritura.close();
+	}
+
+	void cargarMovimientosDesdeArchivos(){
+		ifstream archCA("MovimientosCA.Txt");
+		ifstream archTD("MovimientosTD.Txt");
+		ifstream archTC("MovimientosTC.Txt");
+
+		cantDatosCA = cantDatosTD = cantDatosTC = 0;
+
+		if (archCA.is_open()) {
+			int dia, mes, anio;
+			char tipoMov;
+			char detalle[26];
+			float importe;
+
+			while (archCA >> dia >> mes >> anio >> tipoMov >> detalle >> importe) {
+				if (cantDatosCA >= MAX_MOVIMIENTOS) break;
+				datos_ca[cantDatosCA].dia = dia;
+				datos_ca[cantDatosCA].mes = mes;
+				datos_ca[cantDatosCA].anio = anio;
+				datos_ca[cantDatosCA].tipoMov = tipoMov;
+				strcpy(datos_ca[cantDatosCA].detalle, detalle);
+				datos_ca[cantDatosCA].importe = importe;
+				datos_ca[cantDatosCA].fecha = anio * 10000 + mes * 100 + dia;
+				cantDatosCA++;
+			}
+		}
+
+		if (archTD.is_open()) {
+			int dia, mes, anio;
+			char detalle[26];
+			float importe;
+
+			while (archTD >> dia >> mes >> anio >> detalle >> importe) {
+				if (cantDatosTD >= MAX_MOVIMIENTOS) break;
+				datos_td[cantDatosTD].dia = dia;
+				datos_td[cantDatosTD].mes = mes;
+				datos_td[cantDatosTD].anio = anio;
+				strcpy(datos_td[cantDatosTD].detalle, detalle);
+				datos_td[cantDatosTD].importe = importe;
+				datos_td[cantDatosTD].fecha = anio * 10000 + mes * 100 + dia;
+				cantDatosTD++;
+			}
+		}
+
+		if (archTC.is_open()) {
+			string linea;
+			while (getline(archTC, linea)) {
+				if (linea.empty()) continue;
+				if (cantDatosTC >= MAX_MOVIMIENTOS) break;
+
+				stringstream ss(linea);
+				int dia, mes, anio;
+				string detalle;
+				string token;
+				float importe = 0;
+
+				if (!(ss >> dia >> mes >> anio >> detalle)) continue;
+
+				if (ss >> token) {
+					stringstream valor(token);
+					if (valor >> importe) {
+						strcpy(datos_tc[cantDatosTC].cuotas, "");
+					} else {
+						strncpy(datos_tc[cantDatosTC].cuotas, token.c_str(), 5);
+						datos_tc[cantDatosTC].cuotas[5] = '\0';
+						ss >> importe;
+					}
+				}
+
+				datos_tc[cantDatosTC].dia = dia;
+				datos_tc[cantDatosTC].mes = mes;
+				datos_tc[cantDatosTC].anio = anio;
+				strcpy(datos_tc[cantDatosTC].detalle, detalle.c_str());
+				datos_tc[cantDatosTC].importe = importe;
+				datos_tc[cantDatosTC].fecha = anio * 10000 + mes * 100 + dia;
+				cantDatosTC++;
+			}
+		}
+		archTC.close();
+		archCA.close();
+		archTD.close();
+	}
+
+	void guardarMovimientosEnArchivos(){
+		ofstream archCA("MovimientosCA.Txt");
+		ofstream archTD("MovimientosTD.Txt");
+		ofstream archTC("MovimientosTC.Txt");
+
+		for (int i = 0; i < cantDatosCA; i++) {
+			archCA << right << setw(2) << datos_ca[i].dia << " "
+			       << right << setw(2) << datos_ca[i].mes << " "
+			       << right << setw(4) << datos_ca[i].anio << " "
+			       << datos_ca[i].tipoMov << " "
+			       << left << setw(25) << datos_ca[i].detalle << " "
+			       << right << fixed << setprecision(2) << setw(11) << datos_ca[i].importe << endl;
+		}
+
+		for (int i = 0; i < cantDatosTD; i++) {
+			archTD << right << setw(2) << datos_td[i].dia << " "
+			       << right << setw(2) << datos_td[i].mes << " "
+			       << right << setw(4) << datos_td[i].anio << " "
+			       << left << setw(25) << datos_td[i].detalle << " "
+			       << right << fixed << setprecision(2) << setw(11) << datos_td[i].importe << endl;
+		}
+
+		for (int i = 0; i < cantDatosTC; i++) {
+			archTC << right << setw(2) << datos_tc[i].dia << " "
+			       << right << setw(2) << datos_tc[i].mes << " "
+			       << right << setw(4) << datos_tc[i].anio << " "
+			       << left << setw(25) << datos_tc[i].detalle << " "
+			       << right << fixed << setprecision(2) << setw(11) << datos_tc[i].importe << endl;
+		}
+
+		archCA.close();
+		archTD.close();
+		archTC.close();
 	}
 }
 using namespace Archivos;
@@ -759,134 +899,6 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void agregarLineaArriba(string nombreArchivo, string nuevaLinea){
-		ifstream lectura(nombreArchivo);
-		stringstream contenidoViejo;
-		contenidoViejo << lectura.rdbuf();
-		lectura.close();
-
-		ofstream escritura(nombreArchivo);
-		escritura << nuevaLinea << endl;
-		escritura << contenidoViejo.str();
-		escritura.close();
-	}
-
-	void cargarMovimientosDesdeArchivos(){
-		ifstream archCA("MovimientosCA.Txt");
-		ifstream archTD("MovimientosTD.Txt");
-		ifstream archTC("MovimientosTC.Txt");
-
-		cantDatosCA = cantDatosTD = cantDatosTC = 0;
-
-		if (archCA.is_open()) {
-			int dia, mes, anio;
-			char tipoMov;
-			char detalle[26];
-			float importe;
-
-			while (archCA >> dia >> mes >> anio >> tipoMov >> detalle >> importe) {
-				if (cantDatosCA >= MAX_MOVIMIENTOS) break;
-				datos_ca[cantDatosCA].dia = dia;
-				datos_ca[cantDatosCA].mes = mes;
-				datos_ca[cantDatosCA].anio = anio;
-				datos_ca[cantDatosCA].tipoMov = tipoMov;
-				strcpy(datos_ca[cantDatosCA].detalle, detalle);
-				datos_ca[cantDatosCA].importe = importe;
-				datos_ca[cantDatosCA].fecha = anio * 10000 + mes * 100 + dia;
-				cantDatosCA++;
-			}
-		}
-
-		if (archTD.is_open()) {
-			int dia, mes, anio;
-			char detalle[26];
-			float importe;
-
-			while (archTD >> dia >> mes >> anio >> detalle >> importe) {
-				if (cantDatosTD >= MAX_MOVIMIENTOS) break;
-				datos_td[cantDatosTD].dia = dia;
-				datos_td[cantDatosTD].mes = mes;
-				datos_td[cantDatosTD].anio = anio;
-				strcpy(datos_td[cantDatosTD].detalle, detalle);
-				datos_td[cantDatosTD].importe = importe;
-				datos_td[cantDatosTD].fecha = anio * 10000 + mes * 100 + dia;
-				cantDatosTD++;
-			}
-		}
-
-		if (archTC.is_open()) {
-			string linea;
-			while (getline(archTC, linea)) {
-				if (linea.empty()) continue;
-				if (cantDatosTC >= MAX_MOVIMIENTOS) break;
-
-				stringstream ss(linea);
-				int dia, mes, anio;
-				string detalle;
-				string token;
-				float importe = 0;
-
-				if (!(ss >> dia >> mes >> anio >> detalle)) continue;
-
-				if (ss >> token) {
-					stringstream valor(token);
-					if (valor >> importe) {
-						strcpy(datos_tc[cantDatosTC].cuotas, "");
-					} else {
-						strncpy(datos_tc[cantDatosTC].cuotas, token.c_str(), 5);
-						datos_tc[cantDatosTC].cuotas[5] = '\0';
-						ss >> importe;
-					}
-				}
-
-				datos_tc[cantDatosTC].dia = dia;
-				datos_tc[cantDatosTC].mes = mes;
-				datos_tc[cantDatosTC].anio = anio;
-				strcpy(datos_tc[cantDatosTC].detalle, detalle.c_str());
-				datos_tc[cantDatosTC].importe = importe;
-				datos_tc[cantDatosTC].fecha = anio * 10000 + mes * 100 + dia;
-				cantDatosTC++;
-			}
-		}
-		archTC.close();
-		archCA.close();
-		archTD.close();
-	}
-
-	void guardarMovimientosEnArchivos(){
-		ofstream archCA("MovimientosCA.Txt");
-		ofstream archTD("MovimientosTD.Txt");
-		ofstream archTC("MovimientosTC.Txt");
-
-		for (int i = 0; i < cantDatosCA; i++) {
-			archCA << right << setw(2) << datos_ca[i].dia << " "
-			       << right << setw(2) << datos_ca[i].mes << " "
-			       << right << setw(4) << datos_ca[i].anio << " "
-			       << datos_ca[i].tipoMov << " "
-			       << left << setw(25) << datos_ca[i].detalle << " "
-			       << right << fixed << setprecision(2) << setw(11) << datos_ca[i].importe << endl;
-		}
-
-		for (int i = 0; i < cantDatosTD; i++) {
-			archTD << right << setw(2) << datos_td[i].dia << " "
-			       << right << setw(2) << datos_td[i].mes << " "
-			       << right << setw(4) << datos_td[i].anio << " "
-			       << left << setw(25) << datos_td[i].detalle << " "
-			       << right << fixed << setprecision(2) << setw(11) << datos_td[i].importe << endl;
-		}
-
-		for (int i = 0; i < cantDatosTC; i++) {
-			archTC << right << setw(2) << datos_tc[i].dia << " "
-			       << right << setw(2) << datos_tc[i].mes << " "
-			       << right << setw(4) << datos_tc[i].anio << " "
-			       << left << setw(25) << datos_tc[i].detalle << " "
-			       << right << fixed << setprecision(2) << setw(11) << datos_tc[i].importe << endl;
-		}
-
-		archCA.close();
-		archTD.close();
-		archTC.close();
-	}
 
 	void OpcIPF(){
 		OcultarCursor();
@@ -910,12 +922,14 @@ namespace MenuyExt{
 	    line << right << setw(2) << dia << " "
 	            << right << setw(2) << mes << " "
 	            << right << setw(4) << anio<< " "
-	            << 'H' << " "
+	            << 'D' << " "
 	            << left << setw(25) << "Inversion_Plazo_Fijo" << " "
 	            << right << fixed << setprecision(2) << setw(11) << inv;
 
 		agregarLineaArriba("MovimientosCA.Txt", line.str());
-
+		cargarMovimientosDesdeArchivos();
+		ordenamiento(datos_ca, datos_td, datos_tc, cantDatosCA, cantDatosTD, cantDatosTC);
+		guardarMovimientosEnArchivos();
 		_gotoxy(10,20);
 		Pausa();
 		OcultarCursor();
@@ -973,13 +987,10 @@ namespace MenuyExt{
 		ifstream archivo("MovimientosCA.Txt");
 		string linea = "";
         int cantLin = 11;
-
         while (getline(archivo, linea)) {
             cantLin++;
         }
         archivo.close();
-
-
         RedimensionarVentana(85, cantLin+8);
         LimpiarInteriorMarco(2, 2, 85, cantLin+6);
 		OcultarCursor();
@@ -988,44 +999,36 @@ namespace MenuyExt{
 		_textcolor(BLANCO);
         _gotoxy(10,4);
 		FechaHoy();
+		
         _gotoxy(15,7);
-
-
 		cout << Separador(48, '-');
 		_gotoxy(15,8);
 		cout << "     Fecha Descripcion                   Importe" << endl;
         _gotoxy(15,9);
         cout << Separador(48, '-');
         _textcolor(ROJO_CLARO);
-
+        
         archivo.open("MovimientosCA.Txt");
-
         for(int i = 0; i < cantLin; i++){
             getline(archivo, linea);
             _gotoxy(15, cantLin-2-i);
             cout << linea;
         }
-
+        
         archivo.close();
         archivo.open("MovimientosCA.Txt");
         int dia, mes, anio;
+        char tipoMov;
         string descripcion;
         double monto, montoFinal = 0;
 
-
-        for(int i = 0; i < cantLin; i++){
-            while(archivo >> dia >> mes >> anio >> descripcion >> monto){
-                montoFinal += monto;
-                _gotoxy(15, cantLin-2-i);
-                //cout << dia << "-" << mes << "-" << anio << "-" << descripcion << "-" << monto;
-            }
+        while(archivo >> dia >> mes >> anio >> tipoMov >> descripcion >> monto){
+            montoFinal += monto;
         }
 
         ostringstream stream;
         stream << fixed << setprecision(2) << montoFinal;
-
         string textoMonto = stream.str();
-
         _textcolor(BLANCO);
         _gotoxy(15,cantLin-1);
 		cout << Separador(48, '-');
@@ -1034,14 +1037,13 @@ namespace MenuyExt{
 		cout << "                     Total monto: $" << endl;
         _gotoxy(15,cantLin+1);
         cout << Separador(48, '-');
-
+        
 		Sleep(3000);
 		Pausa(cantLin+4);
         _textbackground(NEGRO);
         _clrscr();
 		RedimensionarVentana(85, 24);
 		Marco(2, 2, 81, 23, AZUL_CLARO);
-
 		OcultarCursor();
 	}
 
@@ -1193,112 +1195,150 @@ namespace MenuyExt{
 		OcultarCursor();
 			
 	}
-	
+
+	double CalcularTotalCA(const string& nombreArchivo){
+	    ifstream archivo(nombreArchivo);
+	    int d, m, a;
+	    char tipoMov;
+	    string descripcion;
+	    double monto, total = 0;
+	    while(archivo >> d >> m >> a >> tipoMov >> descripcion >> monto){
+	        total += monto;
+	    }
+	    archivo.close();
+	    return total;
+	}
+
 	void OpcCom(){
-		OcultarCursor();
-		Plantilla("Compra");
-		_textcolor(15);
-		float cap;
-		char fecha[11];
-		int dia, mes, anio;
-		string det;
-		string tipo;
-		
-		_gotoxy(30,6); 
-		cout << "Ingrese fecha con formato DD/MM/AAAA";
-		_gotoxy(30,7); cout << "Fecha: ";
-		_gotoxy(30,10); cout << "Monto: ";
-		_gotoxy(30,13); cout << "Detalle: ";
-		_gotoxy(30,16); cout << "Monto D,C: ";
-		
-
-		_textcolor(14);
-		
-		_gotoxy(40,7);
-		Borrado(40);
-
-		_gotoxy(40,7); cin >> fecha;
-		stringstream ss(fecha);
-		char barra;
-		ss >> dia >> barra >> mes >> barra >> anio;
-
-		do{
-			_gotoxy(40,10); cin >> cap;
-			if(cap < 0){
-				_gotoxy(40,10);
-				Borrado(40);
-				_textcolor(4);
-				_gotoxy(30,11); cout << "*Error, monto menor a cero";
-				_textcolor(14);
-			}		
-		}while(cap < 0);
-
-		_gotoxy(30,11);
-		Borrado(40);
-
-		do{
-			_gotoxy(40,13); cin >> det;
-			if(det.length() > 25){
-				_gotoxy(40,13);
-				Borrado(40);
-				_textcolor(4);
-				_gotoxy(30,14); cout << "*Error, detalle demasiado largo";
-				_textcolor(14);
-			}		
-		}while(det.length() > 25);
-
-		_gotoxy(30,14);
-		Borrado(40);
-
-		do{
-			_gotoxy(41,16); cin >> tipo;
-			if(tipo != "D" && tipo != "C"){
-				_gotoxy(40,16);
-				Borrado(40);
-				_textcolor(4);
-				_gotoxy(30,17); cout << "*Error, modo no válido";
-				_textcolor(14);
-			}		
-		}while(tipo != "D" && tipo != "C");
-
-		_gotoxy(30,17);
-		Borrado(40);
-
-		ostringstream  line;
-	    line << right << setw(2) << dia << " "
-	            << right << setw(2) << mes << " "
-	            << right << setw(4) << anio<< " "
-	            << 'H' << " "
-	            << left << setw(25) << det << " "
-	            << right << fixed << setprecision(2) << setw(11) << cap;
-		agregarLineaArriba("MovimientosCA.Txt", line.str());
-
-		if (tipo == "D"){
-			ostringstream  line;
-	   		line << right << setw(2) << dia << " "
-	            	<< right << setw(2) << mes << " "
-	            	<< right << setw(4) << anio<< " "
-	            	<< left << setw(25) << det << " "
-	            	<< right << fixed << setprecision(2) << setw(11) << cap;
-			agregarLineaArriba("MovimientosTD.Txt", line.str());
-		}else{
-			ostringstream  line;
-	   		line << right << setw(2) << dia << " "
-	            	<< right << setw(2) << mes << " "
-	            	<< right << setw(4) << anio<< " "
-	            	<< left << setw(25) << det << " "
-					<< right << setw(5) << "     " << " "
-	            	<< right << fixed << setprecision(2) << setw(11) << cap;
-			agregarLineaArriba("MovimientosTC.Txt", line.str());
-		}
-		cargarMovimientosDesdeArchivos();
-		ordenamiento(datos_ca, datos_td, datos_tc, cantDatosCA, cantDatosTD, cantDatosTC);
-		guardarMovimientosEnArchivos();
-		
-		Sleep(3000);
-		_gotoxy(10,21);
-		Pausa();
-		OcultarCursor();	
+	    OcultarCursor();
+	    Plantilla("Compra");
+	
+	    double TOTALAC = CalcularTotalCA("MovimientosCA.Txt");
+	
+	    if(TOTALAC > 0){
+	
+	        float cap;
+	        char fecha[11];
+	        int dia, mes, anio;
+	        string det;
+	        char tipo;
+	        _textcolor(3);
+	        _gotoxy(30,6); 
+	        cout << "Ingrese fecha con formato DD/MM/AAAA";
+	        _textcolor(15);
+	        _gotoxy(30,7); cout << "Fecha: ";
+	        _gotoxy(30,10); cout << "Monto: ";
+	        _gotoxy(30,13); cout << "Detalle: ";
+	        _gotoxy(30,16); cout << "Monto D,C: ";
+	        
+	        _gotoxy(40,7);
+	        Borrado(40);
+	        _gotoxy(40,7); cin >> fecha;
+	        stringstream ss(fecha);
+	        char barra;
+	        ss >> dia >> barra >> mes >> barra >> anio;
+	        do{
+	            _gotoxy(40,10); cin >> cap;
+	            if(cap < 0){
+	                _gotoxy(40,10);
+	                Borrado(40);
+	                _textcolor(4);
+	                _gotoxy(30,11); cout << "*Error, monto menor a cero";
+	                _textcolor(14);
+	            }		
+	        }while(cap < 0);
+	        _gotoxy(30,11);
+	        Borrado(40);
+	        do{
+	            _gotoxy(40,13); cin >> det;
+	            if(det.length() > 25){
+	                _gotoxy(40,13);
+	                Borrado(40);
+	                _textcolor(4);
+	                _gotoxy(30,14); cout << "*Error, detalle demasiado largo";
+	                _textcolor(14);
+	            }		
+	        }while(det.length() > 25);
+	        _gotoxy(30,14);
+	        Borrado(40);
+	
+	        double TOTALTD = CalcularTotal("MovimientosTD.Txt");
+	        double TOTALTC = CalcularTotal("MovimientosTC.Txt");
+	
+	        do{
+	            _gotoxy(41,16); cin >> tipo;
+	            tipo = toupper(tipo);
+	            if(tipo != 'D' && tipo != 'C'){
+	                _gotoxy(40,16);
+	                Borrado(40);
+	                _textcolor(4);
+	                _gotoxy(30,17); cout << "*Error, modo no válido";
+	                _textcolor(14);
+	            }else if(tipo == 'D' && cap < TOTALTD){
+	                
+	                _gotoxy(40,16);
+	                Borrado(40);
+	                _textcolor(4);
+	                _gotoxy(30,17); cout << "*Error, excede el capital actual";
+	                _textcolor(14);				
+	                
+	            }else if(tipo == 'C' && cap < TOTALTC){
+	                
+	                _gotoxy(40,16);
+	                Borrado(40);
+	                _textcolor(4);
+	                _gotoxy(30,17); cout << "*Error, excede el capital disponible en credito";
+	                _textcolor(14);	
+	            }
+	            
+	        }while(tipo != 'D' && tipo != 'C');
+	        _gotoxy(30,17);
+	        Borrado(40);
+	        
+	        ostringstream  line;
+	        line << right << setw(2) << dia << " "
+	                << right << setw(2) << mes << " "
+	                << right << setw(4) << anio<< " "
+	                << 'H' << " "
+	                << left << setw(25) << det << " "
+	                << right << fixed << setprecision(2) << setw(11) << cap;
+	        agregarLineaArriba("MovimientosCA.Txt", line.str());
+	        if (tipo == 'D'){
+	            ostringstream  line;
+	            line << right << setw(2) << dia << " "
+	                    << right << setw(2) << mes << " "
+	                    << right << setw(4) << anio<< " "
+	                    << left << setw(25) << det << " "
+	                    << right << fixed << setprecision(2) << setw(11) << cap;
+	            agregarLineaArriba("MovimientosTD.Txt", line.str());
+	        }else{
+	            ostringstream  line;
+	            line << right << setw(2) << dia << " "
+	                    << right << setw(2) << mes << " "
+	                    << right << setw(4) << anio<< " "
+	                    << left << setw(25) << det << " "
+	                    << right << setw(5) << "     " << " "
+	                    << right << fixed << setprecision(2) << setw(11) << cap;
+	            agregarLineaArriba("MovimientosTC.Txt", line.str());
+	        }
+	        cargarMovimientosDesdeArchivos();
+	        ordenamiento(datos_ca, datos_td, datos_tc, cantDatosCA, cantDatosTD, cantDatosTC);
+	        guardarMovimientosEnArchivos();
+	        
+	    }else{
+	        
+	        _textcolor(4);
+	        _gotoxy(25,11);
+	        cout << "Actualmente posee saldo Negativo/Nulo";
+	        _gotoxy(25,12);
+	        cout << "No podrá realizar compras de ningun tipo";
+	        
+	    }	
+	    
+	    Sleep(3000);
+	    _gotoxy(10,21);
+	    Pausa();
+	    OcultarCursor();	
 	}
 
 	void OpcOU(RegUsuario listaUsuarios[]){
