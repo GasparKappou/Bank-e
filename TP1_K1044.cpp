@@ -1300,7 +1300,7 @@ namespace MenuyExt{
 
 		_textcolor(14);
 		_gotoxy(5,5); cout << "Listado Usuarios ordenado por Apellido Nombre";
-		_gotoxy(5,6); cout << "Apellido Nombre" << setw(13) << "DNI" << " " << "CBU";
+		_gotoxy(25,7); cout << "Apellido Nombre" << setw(13) << "DNI" << " " << "CBU";
 
 		bool intercambio;
 
@@ -1318,12 +1318,12 @@ namespace MenuyExt{
 		        break;
 		}
 
-		_textcolor(15);
+		_textcolor(5);
 
 		for (int i = 0; i < MAX_USUARIOS; i++){
-			_gotoxy(5, i + 7); cout << listaUsuarios[i].apellidoNombre;
-			_gotoxy(25, i + 7); cout << listaUsuarios[i].dni;
-			_gotoxy(34, i + 7); cout << listaUsuarios[i].cbu;
+			_gotoxy(25, i + 9); cout << listaUsuarios[i].apellidoNombre;
+			_gotoxy(45, i + 9); cout << listaUsuarios[i].dni;
+			_gotoxy(54, i + 9); cout << listaUsuarios[i].cbu;
 		}	
 		
 		Sleep(3000);
@@ -1491,8 +1491,8 @@ int main(){
     RegUsuario listaUsuarios[MAX_USUARIOS] = {
         {12345678, "Juan Gonzalez", "01/01/1990", "jgonz", "clave1", "1234", "a@a.com", "Calle 1", "CA-001", "00000001"},
         {22333444, "Gomez Ana", "05/02/1992", "agomez", "clave2", "5678", "b@b.com", "Calle 2", "CA-002", "00000002"},
-        {33444555, "Lopez Luis", "10/03/1985", "llopez", "clave3", "9101", "c@c.com", "Calle 3", "CA-003", "00000003"},
-        {44555666, "Diaz Carla", "15/04/1995", "cdiaz", "clave4", "1122", "d@d.com", "Calle 4", "CA-004", "00000004"},
+        {33444555, "Fernandez Luis", "10/03/1985", "llopez", "clave3", "9101", "c@c.com", "Calle 3", "CA-003", "00000003"},
+        {44555666, "Castro Carla", "15/04/1995", "cdiaz", "clave4", "1122", "d@d.com", "Calle 4", "CA-004", "00000004"},
         {1, "1", "1", "1", "1", "1", "1", "1", "1", "1"}
     };
 
