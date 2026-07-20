@@ -921,7 +921,6 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-
 	void OpcDP(RegUsuario listaUsuarios[], short t){
 
 		OcultarCursor();
@@ -1195,10 +1194,6 @@ namespace MenuyExt{
 			
 	}
 	
-	//Agregar lineas a sus respectivos archivos en los modulos de compra y deposito
-	//Ordenar dichas lineas
-	//Borrar los textos de error una vez que se escribe bien (mirar modulo "Inversion de capital")
-	//ordenamiento();
 	void OpcCom(){
 		OcultarCursor();
 		Plantilla("Compra");
@@ -1301,7 +1296,7 @@ namespace MenuyExt{
 		guardarMovimientosEnArchivos();
 		
 		Sleep(3000);
-		_gotoxy(10,19);
+		_gotoxy(10,21);
 		Pausa();
 		OcultarCursor();	
 	}
