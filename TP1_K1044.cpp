@@ -360,7 +360,7 @@ namespace Archivos{
 		long fecha;
 		short dia, mes, anio;
 	    char detalle[25];
-	    char cuotas[5];
+	    char cuotas[6];
 	    float importe;
 	}MovimientosTC;
 	
@@ -372,7 +372,6 @@ namespace Archivos{
 	    "Reintegro_Promocion_Bco"
 	};
 	
-	
 	const char asuntosTC[5][25] = {
 	    "Supermercado_COTO",
 	    "Estacion_Servicio_YPF",
@@ -381,7 +380,6 @@ namespace Archivos{
 	    "Pasajes_Aerolineas_Arg"
 	};
 	
-	
 	const char asuntosTD[5][25] = {
 	    "Farmacia_Del_Centro",
 	    "Pago_Servicios_Luz",
@@ -389,14 +387,23 @@ namespace Archivos{
 	    "Restaurante_Comida_Rap",
 	    "Carniceria_La_Estancia"
 	};
+
+	const int MAX_MOVIMIENTOS = 100;
+	MovimientosCA datos_ca[MAX_MOVIMIENTOS];
+	MovimientosTD datos_td[MAX_MOVIMIENTOS];
+	MovimientosTC datos_tc[MAX_MOVIMIENTOS];
+	int cantDatosCA = 0;
+	int cantDatosTD = 0;
+	int cantDatosTC = 0;
 	
-	void ordenamiento(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[]){
+	void ordenamiento(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[],
+	                  int cant_ca, int cant_td, int cant_tc){
 		bool intercambio;
 		
-		for (int i = 0; i < 15 - 1; i++) {
+		for (int i = 0; i < cant_ca - 1; i++) {
 		    intercambio = false;
 		
-		    for (int j = 0; j < 15 - 1 - i; j++) {
+		    for (int j = 0; j < cant_ca - 1 - i; j++) {
 		        if (datos_ca[j].fecha < datos_ca[j + 1].fecha) {
 		            swap(datos_ca[j], datos_ca[j + 1]);
 		            intercambio = true;
@@ -407,10 +414,10 @@ namespace Archivos{
 		        break;
 		}
 		
-		for (int i = 0; i < 15 - 1; i++) {
+		for (int i = 0; i < cant_td - 1; i++) {
 		    intercambio = false;
 		
-		    for (int j = 0; j < 15 - 1 - i; j++) {
+		    for (int j = 0; j < cant_td - 1 - i; j++) {
 		        if (datos_td[j].fecha < datos_td[j + 1].fecha) {
 		            swap(datos_td[j], datos_td[j + 1]);
 		            intercambio = true;
@@ -421,10 +428,10 @@ namespace Archivos{
 		        break;
 		}
 		
-		for (int i = 0; i < 15 - 1; i++) {
+		for (int i = 0; i < cant_tc - 1; i++) {
 		    intercambio = false;
 		
-		    for (int j = 0; j < 15 - 1 - i; j++) {
+		    for (int j = 0; j < cant_tc - 1 - i; j++) {
 		        if (datos_tc[j].fecha < datos_tc[j + 1].fecha) {
 		            swap(datos_tc[j], datos_tc[j + 1]);
 		            intercambio = true;
@@ -435,7 +442,7 @@ namespace Archivos{
 		        break;
 		}		
 	}
-	
+
 	void carga(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[]){
 		srand(time(NULL));
 		int diaHoy, mesHoy, anioHoy, ds;
@@ -489,18 +496,18 @@ namespace Archivos{
         
         int indiceRandom = rand() % 5;
         strcpy(datos_tc[i].detalle, asuntosTC[indiceRandom]);
-        strcpy(datos_tc[i].cuotas, "01/03"); 
+        strcpy(datos_tc[i].cuotas, ""); 
         datos_tc[i].importe = 25000.00 + (i * 500.00);          
     }
-	ordenamiento(datos_ca, datos_td, datos_tc);
+	ordenamiento(datos_ca, datos_td, datos_tc, 15, 15, 15);
 	}
 	
-	void impresion(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[]){
+	void impresion(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[], int cant_ca, int cant_td, int cant_tc){
 	    ofstream archCA("MovimientosCA.Txt");
 	    ofstream archTD("MovimientosTD.Txt");    
 	    ofstream archTC("MovimientosTC.Txt");
 
-	    for(short i = 0; i < 15; i++) {
+	    for(int i = 0; i < cant_ca; i++) {
 	        archCA << right << setw(2) << datos_ca[i].dia << " "
 	               << right << setw(2) << datos_ca[i].mes << " "
 	               << right << setw(4) << datos_ca[i].anio << " "
@@ -509,7 +516,7 @@ namespace Archivos{
 	               << right << fixed << setprecision(2) << setw(11) << datos_ca[i].importe << endl;
 	    }
     
-	    for(short i = 0; i < 15; i++) {
+	    for(int i = 0; i < cant_td; i++) {
 	        archTD << right << setw(2) << datos_td[i].dia << " "
 	               << right << setw(2) << datos_td[i].mes << " "
 	               << right << setw(4) << datos_td[i].anio << " "
@@ -517,7 +524,7 @@ namespace Archivos{
 	               << right << fixed << setprecision(2) << setw(11) << datos_td[i].importe << endl;
 	    }
 
-	    for(short i = 0; i < 15; i++) {
+	    for(int i = 0; i < cant_tc; i++) {
 	        archTC << right << setw(2) << datos_tc[i].dia << " "
 	               << right << setw(2) << datos_tc[i].mes << " "
 	               << right << setw(4) << datos_tc[i].anio << " "
@@ -537,7 +544,7 @@ namespace Archivos{
 		MovimientosTC datos_tc[100];
 		
 		carga(datos_ca, datos_td, datos_tc);
-		impresion(datos_ca, datos_td, datos_tc);
+		impresion(datos_ca, datos_td, datos_tc, 15, 15, 15);
 	}
 }
 using namespace Archivos;
@@ -742,6 +749,123 @@ namespace MenuyExt{
 		escritura.close();
 	}
 
+	void cargarMovimientosDesdeArchivos(){
+		ifstream archCA("MovimientosCA.Txt");
+		ifstream archTD("MovimientosTD.Txt");
+		ifstream archTC("MovimientosTC.Txt");
+
+		cantDatosCA = cantDatosTD = cantDatosTC = 0;
+
+		if (archCA.is_open()) {
+			int dia, mes, anio;
+			char tipoMov;
+			char detalle[26];
+			float importe;
+
+			while (archCA >> dia >> mes >> anio >> tipoMov >> detalle >> importe) {
+				if (cantDatosCA >= MAX_MOVIMIENTOS) break;
+				datos_ca[cantDatosCA].dia = dia;
+				datos_ca[cantDatosCA].mes = mes;
+				datos_ca[cantDatosCA].anio = anio;
+				datos_ca[cantDatosCA].tipoMov = tipoMov;
+				strcpy(datos_ca[cantDatosCA].detalle, detalle);
+				datos_ca[cantDatosCA].importe = importe;
+				datos_ca[cantDatosCA].fecha = anio * 10000 + mes * 100 + dia;
+				cantDatosCA++;
+			}
+			archCA.close();
+		}
+
+		if (archTD.is_open()) {
+			int dia, mes, anio;
+			char detalle[26];
+			float importe;
+
+			while (archTD >> dia >> mes >> anio >> detalle >> importe) {
+				if (cantDatosTD >= MAX_MOVIMIENTOS) break;
+				datos_td[cantDatosTD].dia = dia;
+				datos_td[cantDatosTD].mes = mes;
+				datos_td[cantDatosTD].anio = anio;
+				strcpy(datos_td[cantDatosTD].detalle, detalle);
+				datos_td[cantDatosTD].importe = importe;
+				datos_td[cantDatosTD].fecha = anio * 10000 + mes * 100 + dia;
+				cantDatosTD++;
+			}
+			archTD.close();
+		}
+
+		if (archTC.is_open()) {
+			string linea;
+			while (getline(archTC, linea)) {
+				if (linea.empty()) continue;
+				if (cantDatosTC >= MAX_MOVIMIENTOS) break;
+
+				stringstream ss(linea);
+				int dia, mes, anio;
+				string detalle;
+				string token;
+				float importe = 0;
+
+				if (!(ss >> dia >> mes >> anio >> detalle)) continue;
+
+				if (ss >> token) {
+					stringstream valor(token);
+					if (valor >> importe) {
+						strcpy(datos_tc[cantDatosTC].cuotas, "");
+					} else {
+						strncpy(datos_tc[cantDatosTC].cuotas, token.c_str(), 5);
+						datos_tc[cantDatosTC].cuotas[5] = '\0';
+						ss >> importe;
+					}
+				}
+
+				datos_tc[cantDatosTC].dia = dia;
+				datos_tc[cantDatosTC].mes = mes;
+				datos_tc[cantDatosTC].anio = anio;
+				strcpy(datos_tc[cantDatosTC].detalle, detalle.c_str());
+				datos_tc[cantDatosTC].importe = importe;
+				datos_tc[cantDatosTC].fecha = anio * 10000 + mes * 100 + dia;
+				cantDatosTC++;
+			}
+			archTC.close();
+		}
+	}
+
+	void guardarMovimientosEnArchivos(){
+		ofstream archCA("MovimientosCA.Txt");
+		ofstream archTD("MovimientosTD.Txt");
+		ofstream archTC("MovimientosTC.Txt");
+
+		for (int i = 0; i < cantDatosCA; i++) {
+			archCA << right << setw(2) << datos_ca[i].dia << " "
+			       << right << setw(2) << datos_ca[i].mes << " "
+			       << right << setw(4) << datos_ca[i].anio << " "
+			       << datos_ca[i].tipoMov << " "
+			       << left << setw(25) << datos_ca[i].detalle << " "
+			       << right << fixed << setprecision(2) << setw(11) << datos_ca[i].importe << endl;
+		}
+
+		for (int i = 0; i < cantDatosTD; i++) {
+			archTD << right << setw(2) << datos_td[i].dia << " "
+			       << right << setw(2) << datos_td[i].mes << " "
+			       << right << setw(4) << datos_td[i].anio << " "
+			       << left << setw(25) << datos_td[i].detalle << " "
+			       << right << fixed << setprecision(2) << setw(11) << datos_td[i].importe << endl;
+		}
+
+		for (int i = 0; i < cantDatosTC; i++) {
+			archTC << right << setw(2) << datos_tc[i].dia << " "
+			       << right << setw(2) << datos_tc[i].mes << " "
+			       << right << setw(4) << datos_tc[i].anio << " "
+			       << left << setw(25) << datos_tc[i].detalle << " "
+			       << right << fixed << setprecision(2) << setw(11) << datos_tc[i].importe << endl;
+		}
+
+		archCA.close();
+		archTD.close();
+		archTC.close();
+	}
+
 	void OpcIPF(){
 		OcultarCursor();
 		Plantilla("Inversion Plazo Fijo");
@@ -839,6 +963,9 @@ namespace MenuyExt{
 		
 		_textcolor(14);
 		
+		_gotoxy(40,7);
+		Borrado(40);
+
 		_gotoxy(40,7); cin >> fecha;
 		stringstream ss(fecha);
 		char barra;
@@ -855,6 +982,9 @@ namespace MenuyExt{
 			}		
 		}while(cap < 0);
 
+		_gotoxy(30,11);
+		Borrado(40);
+
 		do{
 			_gotoxy(40,13); cin >> det;
 			if(det.length() > 25){
@@ -866,6 +996,9 @@ namespace MenuyExt{
 			}		
 		}while(det.length() > 25);
 
+		_gotoxy(30,14);
+		Borrado(40);
+
 		ostringstream  line;
 	    line << right << setw(2) << dia << " "
 	            << right << setw(2) << mes << " "
@@ -873,7 +1006,10 @@ namespace MenuyExt{
 	            << 'D' << " "
 	            << left << setw(25) << "Deposito" << " "
 	            << right << fixed << setprecision(2) << setw(11) << cap;
-	
+		agregarLineaArriba("MovimientosCA.Txt", line.str());
+		cargarMovimientosDesdeArchivos();
+		ordenamiento(datos_ca, datos_td, datos_tc, cantDatosCA, cantDatosTD, cantDatosTC);
+		guardarMovimientosEnArchivos();
 		
 		Sleep(3000);
 		_gotoxy(10,17);
@@ -903,6 +1039,9 @@ namespace MenuyExt{
 
 		_textcolor(14);
 		
+		_gotoxy(40,7);
+		Borrado(40);
+
 		_gotoxy(40,7); cin >> fecha;
 		stringstream ss(fecha);
 		char barra;
@@ -919,6 +1058,9 @@ namespace MenuyExt{
 			}		
 		}while(cap < 0);
 
+		_gotoxy(30,11);
+		Borrado(40);
+
 		do{
 			_gotoxy(40,13); cin >> det;
 			if(det.length() > 25){
@@ -930,6 +1072,9 @@ namespace MenuyExt{
 			}		
 		}while(det.length() > 25);
 
+		_gotoxy(30,14);
+		Borrado(40);
+
 		do{
 			_gotoxy(41,16); cin >> tipo;
 			if(tipo != "D" && tipo != "C"){
@@ -940,6 +1085,9 @@ namespace MenuyExt{
 				_textcolor(14);
 			}		
 		}while(tipo != "D" && tipo != "C");
+
+		_gotoxy(30,17);
+		Borrado(40);
 
 		ostringstream  line;
 	    line << right << setw(2) << dia << " "
@@ -966,11 +1114,52 @@ namespace MenuyExt{
 	            	<< left << setw(25) << det << " "
 					<< right << setw(5) << "     " << " "
 	            	<< right << fixed << setprecision(2) << setw(11) << cap;
-	    //agregar a movimientosTC
-		}	
+			agregarLineaArriba("MovimientosTC.Txt", line.str());
+		}
+		cargarMovimientosDesdeArchivos();
+		ordenamiento(datos_ca, datos_td, datos_tc, cantDatosCA, cantDatosTD, cantDatosTC);
+		guardarMovimientosEnArchivos();
 		
 		Sleep(3000);
 		_gotoxy(10,19);
+		Pausa();
+		OcultarCursor();	
+	}
+
+	void OpcOU(RegUsuario listaUsuarios[]){
+		OcultarCursor();
+		Plantilla("Ordenar Usuarios");
+
+		_textcolor(14);
+		_gotoxy(5,5); cout << "Listado Usuarios ordenado por Apellido Nombre";
+		_gotoxy(5,6); cout << "Apellido Nombre" << setw(13) << "DNI" << " " << "CBU";
+
+		bool intercambio;
+
+		for (int i = 0; i < MAX_USUARIOS; i++){
+			intercambio = false;
+		
+		    for (int j = 0; j < MAX_USUARIOS - 1 - i; j++) {
+		        if (listaUsuarios[j].apellidoNombre[0] > listaUsuarios[j + 1].apellidoNombre[0]) {
+		            swap(listaUsuarios[j], listaUsuarios[j + 1]);
+		            intercambio = true;
+		        }
+		    }
+		
+		    if (!intercambio)
+		        break;
+		}
+
+		_textcolor(15);
+
+		for (int i = 0; i < MAX_USUARIOS; i++){
+			_gotoxy(5, i + 7); cout << listaUsuarios[i].apellidoNombre;
+			_gotoxy(25, i + 7); cout << listaUsuarios[i].dni;
+			_gotoxy(34, i + 7); cout << listaUsuarios[i].cbu;
+		}	
+		
+		Sleep(3000);
+		_gotoxy(10,17);
 		Pausa();
 		OcultarCursor();	
 	}
@@ -1106,10 +1295,10 @@ namespace User{
 					break;
 				case 9:
 					OpcCom();
-					break;/*
+					break;
 				case 10:
-					OpcOU(listaUsuarios[]);
-					break;*/
+					OpcOU(listaUsuarios);
+					break;
 				case 11:
 					OpcCS();
 					break;
@@ -1139,7 +1328,7 @@ int main(){
     }; 
 	
 	
-	short t = IniciarSesion(listaUsuarios);
+	short t = 1;//IniciarSesion(listaUsuarios);
 	if(t != -1){
 		MenuUser(listaUsuarios, t);
 	}else{
