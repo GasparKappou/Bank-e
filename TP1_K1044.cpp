@@ -842,15 +842,92 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void OpcMTD(RegUsuario listaUsuarios[], short t){
-		ifstream archivo("MovimientosTD.Txt");
-		string linea;
-        int cantLin;
+	void OpcMCA(RegUsuario listaUsuarios[], short t){
+		ifstream archivo("MovimientosCA.Txt");
+		string linea = "";
+        int cantLin = 11;
 
         while (getline(archivo, linea)) {
             cantLin++;
         }
         archivo.close();
+
+
+        RedimensionarVentana(85, cantLin+8);
+        LimpiarInteriorMarco(2, 2, 85, cantLin+6);
+		OcultarCursor();
+		Plantilla("Movimientos de Caja de Ahorro");
+		Marco(2, 2, 81, cantLin+6, AZUL_CLARO);
+		_textcolor(BLANCO);
+        _gotoxy(10,4);
+		FechaHoy();
+        _gotoxy(15,7);
+
+
+		cout << Separador(48, '-');
+		_gotoxy(15,8);
+		cout << "     Fecha Descripcion                   Importe" << endl;
+        _gotoxy(15,9);
+        cout << Separador(48, '-');
+        _textcolor(ROJO_CLARO);
+
+        archivo.open("MovimientosCA.Txt");
+
+        for(int i = 0; i < cantLin; i++){
+            getline(archivo, linea);
+            _gotoxy(15, cantLin-2-i);
+            cout << linea;
+        }
+
+        archivo.close();
+        archivo.open("MovimientosCA.Txt");
+        int dia, mes, anio;
+        string descripcion;
+        double monto, montoFinal = 0;
+
+
+        for(int i = 0; i < cantLin; i++){
+            while(archivo >> dia >> mes >> anio >> descripcion >> monto){
+                montoFinal += monto;
+                _gotoxy(15, cantLin-2-i);
+                //cout << dia << "-" << mes << "-" << anio << "-" << descripcion << "-" << monto;
+            }
+        }
+
+        ostringstream stream;
+        stream << fixed << setprecision(2) << montoFinal;
+
+        string textoMonto = stream.str();
+
+        _textcolor(BLANCO);
+        _gotoxy(15,cantLin-1);
+		cout << Separador(48, '-');
+		MnsgBox(15, cantLin, textoMonto, 'd', 48);
+		_gotoxy(15,cantLin);
+		cout << "                     Total monto: $" << endl;
+        _gotoxy(15,cantLin+1);
+        cout << Separador(48, '-');
+
+		Sleep(3000);
+		Pausa(cantLin+4);
+        _textbackground(NEGRO);
+        _clrscr();
+		RedimensionarVentana(85, 24);
+		Marco(2, 2, 81, 23, AZUL_CLARO);
+
+		OcultarCursor();
+	}
+
+	void OpcMTD(RegUsuario listaUsuarios[], short t){
+		ifstream archivo("MovimientosTD.Txt");
+		string linea = "";
+        int cantLin = 11;
+
+        while (getline(archivo, linea)) {
+            cantLin++;
+        }
+        archivo.close();
+
 
         RedimensionarVentana(85, cantLin+8);
         LimpiarInteriorMarco(2, 2, 85, cantLin+6);
@@ -1033,10 +1110,9 @@ namespace User{
 				case 4:
 					OpcCBU(listaUsuarios, t);
 					break;
-					/*
 				case 5:
-					OpcMCA(listaUsuarios[]);
-					break;*/
+					OpcMCA(listaUsuarios, t);
+					break;
 				case 6:
 					OpcMTD(listaUsuarios, t);
 					break;/*
