@@ -270,6 +270,11 @@ void BloquearCambioTamano(){
     MnsgBox(6,21,"Tecla ESCAPE seleccionar la opción del menú");
     //GoToXY(cIni,lIni);
     _gotoxy(cIni,lIni);
+
+    GetAsyncKeyState(VK_ESCAPE);
+    GetAsyncKeyState(VK_UP);
+    GetAsyncKeyState(VK_DOWN);
+
     while(not GetAsyncKeyState(VK_ESCAPE)) {
       Sleep(200);
       if (GetAsyncKeyState(VK_UP)) {
@@ -398,7 +403,7 @@ namespace Archivos{
 	    "Compra_MercadoLibre",
 	    "Pasajes_Aerolineas_Arg"
 	};
-	
+
 	const char asuntosTD[5][25] = {
 	    "Farmacia_Del_Centro",
 	    "Pago_Servicios_Luz",
@@ -414,14 +419,14 @@ namespace Archivos{
 	int cantDatosCA = 0;
 	int cantDatosTD = 0;
 	int cantDatosTC = 0;
-	
+
 	void ordenamiento(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[],
 	                  int cant_ca, int cant_td, int cant_tc){
 		bool intercambio;
-		
+
 		for (int i = 0; i < cant_ca - 1; i++) {
 		    intercambio = false;
-		
+
 		    for (int j = 0; j < cant_ca - 1 - i; j++) {
 		        if (datos_ca[j].fecha < datos_ca[j + 1].fecha) {
 		            swap(datos_ca[j], datos_ca[j + 1]);
@@ -432,10 +437,10 @@ namespace Archivos{
 		    if (!intercambio)
 		        break;
 		}
-		
+
 		for (int i = 0; i < cant_td - 1; i++) {
 		    intercambio = false;
-		
+
 		    for (int j = 0; j < cant_td - 1 - i; j++) {
 		        if (datos_td[j].fecha < datos_td[j + 1].fecha) {
 		            swap(datos_td[j], datos_td[j + 1]);
@@ -446,10 +451,10 @@ namespace Archivos{
 		    if (!intercambio)
 		        break;
 		}
-		
+
 		for (int i = 0; i < cant_tc - 1; i++) {
 		    intercambio = false;
-		
+
 		    for (int j = 0; j < cant_tc - 1 - i; j++) {
 		        if (datos_tc[j].fecha < datos_tc[j + 1].fecha) {
 		            swap(datos_tc[j], datos_tc[j + 1]);
@@ -534,7 +539,7 @@ namespace Archivos{
 	               << left << setw(25) << datos_ca[i].detalle << " "
 	               << right << fixed << setprecision(2) << setw(11) << datos_ca[i].importe << endl;
 	    }
-    
+
 	    for(int i = 0; i < cant_td; i++) {
 	        archTD << right << setw(2) << datos_td[i].dia << " "
 	               << right << setw(2) << datos_td[i].mes << " "
@@ -1004,6 +1009,7 @@ namespace MenuyExt{
             cout << linea;
         }
 
+
         archivo.close();
         archivo.open("MovimientosCA.Txt");
         int dia, mes, anio;
@@ -1128,9 +1134,9 @@ namespace MenuyExt{
 		_gotoxy(30,7); cout << "Fecha: ";
 		_gotoxy(30,10); cout << "Monto: ";
 		_gotoxy(30,13); cout << "Detalle: ";
-		
+
 		_textcolor(14);
-		
+
 		_gotoxy(40,7);
 		Borrado(40);
 
@@ -1147,7 +1153,7 @@ namespace MenuyExt{
 				_textcolor(4);
 				_gotoxy(30,11); cout << "*Error, monto menor a cero";
 				_textcolor(14);
-			}		
+			}
 		}while(cap < 0);
 
 		_gotoxy(30,11);
@@ -1161,7 +1167,7 @@ namespace MenuyExt{
 				_textcolor(4);
 				_gotoxy(30,14); cout << "*Error, detalle demasiado largo";
 				_textcolor(14);
-			}		
+			}
 		}while(det.length() > 25);
 
 		_gotoxy(30,14);
@@ -1178,13 +1184,13 @@ namespace MenuyExt{
 		cargarMovimientosDesdeArchivos();
 		ordenamiento(datos_ca, datos_td, datos_tc, cantDatosCA, cantDatosTD, cantDatosTC);
 		guardarMovimientosEnArchivos();
-		
+
 		Sleep(3000);
 		_gotoxy(10,17);
 		Pausa();
-		OcultarCursor();	
+		OcultarCursor();
 	}
-	
+
 	//Agregar lineas a sus respectivos archivos en los modulos de compra y deposito
 	//Ordenar dichas lineas
 	//Borrar los textos de error una vez que se escribe bien (mirar modulo "Inversion de capital")
@@ -1203,10 +1209,10 @@ namespace MenuyExt{
 		_gotoxy(30,10); cout << "Monto: ";
 		_gotoxy(30,13); cout << "Detalle: ";
 		_gotoxy(30,16); cout << "Monto D,C: ";
-		
+
 
 		_textcolor(14);
-		
+
 		_gotoxy(40,7);
 		Borrado(40);
 
@@ -1223,7 +1229,7 @@ namespace MenuyExt{
 				_textcolor(4);
 				_gotoxy(30,11); cout << "*Error, monto menor a cero";
 				_textcolor(14);
-			}		
+			}
 		}while(cap < 0);
 
 		_gotoxy(30,11);
@@ -1237,7 +1243,7 @@ namespace MenuyExt{
 				_textcolor(4);
 				_gotoxy(30,14); cout << "*Error, detalle demasiado largo";
 				_textcolor(14);
-			}		
+			}
 		}while(det.length() > 25);
 
 		_gotoxy(30,14);
@@ -1251,7 +1257,7 @@ namespace MenuyExt{
 				_textcolor(4);
 				_gotoxy(30,17); cout << "*Error, modo no válido";
 				_textcolor(14);
-			}		
+			}
 		}while(tipo != "D" && tipo != "C");
 
 		_gotoxy(30,17);
@@ -1287,11 +1293,11 @@ namespace MenuyExt{
 		cargarMovimientosDesdeArchivos();
 		ordenamiento(datos_ca, datos_td, datos_tc, cantDatosCA, cantDatosTD, cantDatosTC);
 		guardarMovimientosEnArchivos();
-		
+
 		Sleep(3000);
 		_gotoxy(10,19);
 		Pausa();
-		OcultarCursor();	
+		OcultarCursor();
 	}
 
 	void OpcOU(RegUsuario listaUsuarios[]){
@@ -1306,14 +1312,14 @@ namespace MenuyExt{
 
 		for (int i = 0; i < MAX_USUARIOS; i++){
 			intercambio = false;
-		
+
 		    for (int j = 0; j < MAX_USUARIOS - 1 - i; j++) {
 		        if (listaUsuarios[j].apellidoNombre[0] > listaUsuarios[j + 1].apellidoNombre[0]) {
 		            swap(listaUsuarios[j], listaUsuarios[j + 1]);
 		            intercambio = true;
 		        }
 		    }
-		
+
 		    if (!intercambio)
 		        break;
 		}
@@ -1324,12 +1330,12 @@ namespace MenuyExt{
 			_gotoxy(5, i + 7); cout << listaUsuarios[i].apellidoNombre;
 			_gotoxy(25, i + 7); cout << listaUsuarios[i].dni;
 			_gotoxy(34, i + 7); cout << listaUsuarios[i].cbu;
-		}	
-		
+		}
+
 		Sleep(3000);
 		_gotoxy(10,17);
 		Pausa();
-		OcultarCursor();	
+		OcultarCursor();
 	}
 
 	void OpcCS(){
