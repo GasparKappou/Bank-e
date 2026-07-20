@@ -270,7 +270,7 @@ void BloquearCambioTamano(){
     MnsgBox(6,21,"Tecla ESCAPE seleccionar la opción del menú");
     //GoToXY(cIni,lIni);
     _gotoxy(cIni,lIni);
-	GetAsyncKeyState(VK_ESCAPE);
+GetAsyncKeyState(VK_ESCAPE);
     GetAsyncKeyState(VK_UP);
     GetAsyncKeyState(VK_DOWN);
     while(not GetAsyncKeyState(VK_ESCAPE)) {
@@ -419,7 +419,7 @@ namespace Archivos{
 	int cantDatosTC = 0;
 	
 	void ordenamiento(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[],
-	                  int cant_ca, int cant_td, int cant_tc){
+		int cant_ca, int cant_td, int cant_tc){
 		bool intercambio;
 		
 		for (int i = 0; i < cant_ca - 1; i++) {
@@ -795,7 +795,6 @@ namespace MenuyExt{
 				datos_ca[cantDatosCA].fecha = anio * 10000 + mes * 100 + dia;
 				cantDatosCA++;
 			}
-			archCA.close();
 		}
 
 		if (archTD.is_open()) {
@@ -813,7 +812,6 @@ namespace MenuyExt{
 				datos_td[cantDatosTD].fecha = anio * 10000 + mes * 100 + dia;
 				cantDatosTD++;
 			}
-			archTD.close();
 		}
 
 		if (archTC.is_open()) {
@@ -849,8 +847,10 @@ namespace MenuyExt{
 				datos_tc[cantDatosTC].fecha = anio * 10000 + mes * 100 + dia;
 				cantDatosTC++;
 			}
-			archTC.close();
 		}
+		archTC.close();
+		archCA.close();
+		archTD.close();
 	}
 
 	void guardarMovimientosEnArchivos(){
@@ -1119,6 +1119,7 @@ namespace MenuyExt{
 
 		OcultarCursor();
 	}
+	
 	void OpcDep(){
 		OcultarCursor();
 		Plantilla("Deposito");
@@ -1127,10 +1128,15 @@ namespace MenuyExt{
 		char fecha[11];
 		int dia, mes, anio;
 		string det;
-
-		_gotoxy(30,7); cout << "Fecha: ";
-		_gotoxy(30,10); cout << "Monto: ";
-		_gotoxy(30,13); cout << "Detalle: ";
+		
+		_gotoxy(30,6); 
+		cout << "Ingrese fecha con formato DD/MM/AAAA";
+		_gotoxy(30,7); 
+		cout << "Fecha: ";
+		_gotoxy(30,10); 
+		cout << "Monto: ";
+		_gotoxy(30,13); 
+		cout << "Detalle: ";
 		
 		_textcolor(14);
 		
@@ -1174,8 +1180,8 @@ namespace MenuyExt{
 	    line << right << setw(2) << dia << " "
 	            << right << setw(2) << mes << " "
 	            << right << setw(4) << anio<< " "
-	            << 'D' << " "
-	            << left << setw(25) << "Deposito" << " "
+	            << 'H' << " "
+	            << left << setw(25) << det << " "
 	            << right << fixed << setprecision(2) << setw(11) << cap;
 		agregarLineaArriba("MovimientosCA.Txt", line.str());
 		cargarMovimientosDesdeArchivos();
@@ -1185,7 +1191,8 @@ namespace MenuyExt{
 		Sleep(3000);
 		_gotoxy(10,17);
 		Pausa();
-		OcultarCursor();	
+		OcultarCursor();
+			
 	}
 	
 	//Agregar lineas a sus respectivos archivos en los modulos de compra y deposito
