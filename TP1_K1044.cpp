@@ -1208,7 +1208,9 @@ namespace MenuyExt{
 		int dia, mes, anio;
 		string det;
 		string tipo;
-
+		
+		_gotoxy(30,6); 
+		cout << "Ingrese fecha con formato DD/MM/AAAA";
 		_gotoxy(30,7); cout << "Fecha: ";
 		_gotoxy(30,10); cout << "Monto: ";
 		_gotoxy(30,13); cout << "Detalle: ";
