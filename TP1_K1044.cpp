@@ -907,6 +907,11 @@ namespace MenuyExt{
 
 		Sleep(3000);
 		Pausa(cantLin+4);
+        _textbackground(NEGRO);
+        _clrscr();
+		RedimensionarVentana(85, 24);
+		Marco(2, 2, 81, 23, AZUL_CLARO);
+
 		OcultarCursor();
 	}
 
