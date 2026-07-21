@@ -987,6 +987,7 @@ namespace MenuyExt{
 		ifstream archivo("MovimientosCA.Txt");
 		string linea = "";
         int cantLin = 11;
+        int margen = 4;
         while (getline(archivo, linea)) {
             cantLin++;
         }
@@ -1000,11 +1001,11 @@ namespace MenuyExt{
         _gotoxy(10,4);
 		FechaHoy();
 
-        _gotoxy(4,7);
+        _gotoxy(margen,7);
 		cout << Separador(75, '-');
-		_gotoxy(4,8);
+		_gotoxy(margen,8);
 		cout << "     Fecha T Descripcion                      Debe       Haber        Saldo" << endl;
-        _gotoxy(4,9);
+        _gotoxy(margen,9);
         cout << Separador(75, '-');
         _textcolor(ROJO_CLARO);
 
@@ -1013,7 +1014,7 @@ namespace MenuyExt{
 
         string dia, mes, anio, descripcion, monto;
         char tipoMov;
-        int contador = 0, saldo = 74;
+        int contador = 0, saldo = 75;
         double montoFinal = 0;
 
         while(archivo >> dia >> mes >> anio >> tipoMov >> descripcion >> monto){
@@ -1027,10 +1028,10 @@ namespace MenuyExt{
             stream << fixed << setprecision(2) << montoFinal;
 
             string textoMonto = stream.str();
-            MnsgBox(4, 10+contador, textoMonto, 'd', saldo);
-            MnsgBox(4, 10+contador, monto, 'd', espacio);
+            MnsgBox(margen, 10+contador, textoMonto, 'd', saldo);
+            MnsgBox(margen, 10+contador, monto, 'd', espacio);
             linea = dia + " " + mes + " " + anio + " " + tipoMov + " " + descripcion;
-            _gotoxy(4, 10+contador);
+            _gotoxy(margen, 10+contador);
             contador++;
             cout << linea << endl;
         }
@@ -1038,7 +1039,7 @@ namespace MenuyExt{
 
         archivo.close();
         _textcolor(BLANCO);
-        _gotoxy(4,cantLin-1);
+        _gotoxy(margen,cantLin-1);
 		cout << Separador(75, '-') << endl;
 
 		Sleep(3000);
@@ -1054,6 +1055,7 @@ namespace MenuyExt{
 		ifstream archivo("MovimientosTD.Txt");
 		string linea = "";
         int cantLin = 11;
+        int margen = 17;
 
         while (getline(archivo, linea)) {
             cantLin++;
@@ -1069,49 +1071,46 @@ namespace MenuyExt{
 		_textcolor(BLANCO);
         _gotoxy(10,4);
 		FechaHoy();
-        _gotoxy(15,7);
+        _gotoxy(margen,7);
 		cout << Separador(48, '-');
-		_gotoxy(15,8);
+		_gotoxy(margen,8);
 		cout << "     Fecha Descripcion                   Importe" << endl;
-        _gotoxy(15,9);
+        _gotoxy(margen,9);
         cout << Separador(48, '-');
         _textcolor(ROJO_CLARO);
 
         archivo.open("MovimientosTD.Txt");
 
-        for(int i = 0; i < cantLin; i++){
-            getline(archivo, linea);
-            _gotoxy(15, cantLin-2-i);
-            cout << linea;
+        string dia, mes, anio, descripcion, monto, textoMonto;
+        double montoFinal = 0;
+        int contador = 0;
+        int espacio = 48;
+
+        while(archivo >> dia >> mes >> anio >> descripcion >> monto){
+
+            dia = stoi(dia)<10?dia="0"+dia:dia;
+            mes = stoi(mes)<10?mes="0"+mes:mes;
+            montoFinal += stod(monto);
+
+            ostringstream stream;
+            stream << fixed << setprecision(2) << montoFinal;
+
+            textoMonto = stream.str();
+            MnsgBox(margen, cantLin-2-contador, monto, 'd', espacio);
+            linea = dia + " " + mes + " " + anio + " " + descripcion;
+            _gotoxy(margen, cantLin-2-contador);
+            contador++;
+            cout << linea << endl;
         }
 
         archivo.close();
-        archivo.open("MovimientosTD.Txt");
-        int dia, mes, anio;
-        string descripcion;
-        double monto, montoFinal = 0;
-
-
-        for(int i = 0; i < cantLin; i++){
-            while(archivo >> dia >> mes >> anio >> descripcion >> monto){
-                montoFinal += monto;
-                _gotoxy(15, cantLin-2-i);
-                //cout << dia << "-" << mes << "-" << anio << "-" << descripcion << "-" << monto;
-            }
-        }
-
-        ostringstream stream;
-        stream << fixed << setprecision(2) << montoFinal;
-
-        string textoMonto = stream.str();
-
         _textcolor(BLANCO);
-        _gotoxy(15,cantLin-1);
+        _gotoxy(margen,cantLin-1);
 		cout << Separador(48, '-');
-		MnsgBox(15, cantLin, textoMonto, 'd', 48);
-		_gotoxy(15,cantLin);
+		MnsgBox(margen, cantLin, textoMonto, 'd', 48);
+		_gotoxy(margen,cantLin);
 		cout << "                        Total TD: $" << endl;
-        _gotoxy(15,cantLin+1);
+        _gotoxy(margen,cantLin+1);
         cout << Separador(48, '-');
 
 		Sleep(3000);
@@ -1128,7 +1127,7 @@ namespace MenuyExt{
 		ifstream archivo("MovimientosTC.Txt");
 		string linea = "";
         int cantLin = 11;
-
+        int margen = 14;
         while (getline(archivo, linea)) {
             cantLin++;
         }
@@ -1143,16 +1142,19 @@ namespace MenuyExt{
 		_textcolor(BLANCO);
         _gotoxy(10,4);
 		FechaHoy();
-        _gotoxy(15,7);
+        _gotoxy(margen,7);
 		cout << Separador(54, '-');
-		_gotoxy(15,8);
+		_gotoxy(margen,8);
 		cout << "     Fecha Descripcion              Cuotas     Importe" << endl;
-        _gotoxy(15,9);
+        _gotoxy(margen,9);
         cout << Separador(54, '-');
         _textcolor(ROJO_CLARO);
 
         archivo.open("MovimientosTC.Txt");
 
+
+        //Este codigo muestra linea por linea talcual sin formatear
+        /*
         for(int i = 0; i < cantLin; i++){
             getline(archivo, linea);
             _gotoxy(15, cantLin-2-i);
@@ -1172,19 +1174,38 @@ namespace MenuyExt{
                 //cout << dia << "-" << mes << "-" << anio << "-" << descripcion << "-" << monto;
             }
         }
+        */
+        string dia, mes, anio, descripcion, monto, textoMonto, cuotas;
+        double montoFinal = 0;
+        int contador = 0;
+        int espacio = 54;
 
-        ostringstream stream;
-        stream << fixed << setprecision(2) << montoFinal;
+        while(archivo >> dia >> mes >> anio >> descripcion >> cuotas >> monto){
 
-        string textoMonto = stream.str();
+            dia = stoi(dia)<10?dia="0"+dia:dia;
+            mes = stoi(mes)<10?mes="0"+mes:mes;
+            montoFinal += stod(monto);
+
+            ostringstream stream;
+            stream << fixed << setprecision(2) << montoFinal;
+
+            textoMonto = stream.str();
+            MnsgBox(margen, cantLin-2-contador, monto, 'd', espacio);
+            MnsgBox(margen, cantLin-2-contador, cuotas, 'd', espacio-12);
+            linea = dia + " " + mes + " " + anio + " " + descripcion;
+            _gotoxy(margen, cantLin-2-contador);
+            contador++;
+            cout << linea << endl;
+        }
+        archivo.close();
 
         _textcolor(BLANCO);
-        _gotoxy(15,cantLin-1);
+        _gotoxy(margen,cantLin-1);
 		cout << Separador(54, '-');
-		MnsgBox(15, cantLin, textoMonto, 'd', 54);
-		_gotoxy(15,cantLin);
+		MnsgBox(margen, cantLin, textoMonto, 'd', 54);
+		_gotoxy(margen,cantLin);
 		cout << "                        Total A Pagar: $" << endl;
-        _gotoxy(15,cantLin+1);
+        _gotoxy(margen,cantLin+1);
         cout << Separador(54, '-');
 
 		Sleep(3000);
