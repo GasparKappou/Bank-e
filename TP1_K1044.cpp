@@ -1124,6 +1124,79 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
+	void OpcMTC(RegUsuario listaUsuarios[], short t){
+		ifstream archivo("MovimientosTC.Txt");
+		string linea = "";
+        int cantLin = 11;
+
+        while (getline(archivo, linea)) {
+            cantLin++;
+        }
+        archivo.close();
+
+
+        RedimensionarVentana(85, cantLin+8);
+        LimpiarInteriorMarco(2, 2, 85, cantLin+6);
+		OcultarCursor();
+		Plantilla("Movimientos de Tarjeta de Crédito");
+		Marco(2, 2, 81, cantLin+6, AZUL_CLARO);
+		_textcolor(BLANCO);
+        _gotoxy(10,4);
+		FechaHoy();
+        _gotoxy(15,7);
+		cout << Separador(54, '-');
+		_gotoxy(15,8);
+		cout << "     Fecha Descripcion              Cuotas     Importe" << endl;
+        _gotoxy(15,9);
+        cout << Separador(54, '-');
+        _textcolor(ROJO_CLARO);
+
+        archivo.open("MovimientosTC.Txt");
+
+        for(int i = 0; i < cantLin; i++){
+            getline(archivo, linea);
+            _gotoxy(15, cantLin-2-i);
+            cout << linea;
+        }
+
+        archivo.close();
+        archivo.open("MovimientosTC.Txt");
+        int dia, mes, anio;
+        string descripcion, cuotas;
+        double monto, montoFinal = 0;
+
+
+        for(int i = 0; i < cantLin; i++){
+            while(archivo >> dia >> mes >> anio >> descripcion >> cuotas >> monto){
+                montoFinal += monto;
+                //cout << dia << "-" << mes << "-" << anio << "-" << descripcion << "-" << monto;
+            }
+        }
+
+        ostringstream stream;
+        stream << fixed << setprecision(2) << montoFinal;
+
+        string textoMonto = stream.str();
+
+        _textcolor(BLANCO);
+        _gotoxy(15,cantLin-1);
+		cout << Separador(54, '-');
+		MnsgBox(15, cantLin, textoMonto, 'd', 54);
+		_gotoxy(15,cantLin);
+		cout << "                        Total A Pagar: $" << endl;
+        _gotoxy(15,cantLin+1);
+        cout << Separador(54, '-');
+
+		Sleep(3000);
+		Pausa(cantLin+4);
+        _textbackground(NEGRO);
+        _clrscr();
+		RedimensionarVentana(85, 24);
+		Marco(2, 2, 81, 23, AZUL_CLARO);
+
+		OcultarCursor();
+	}
+
 	void OpcDep(){
 		OcultarCursor();
 		Plantilla("Deposito");
@@ -1505,10 +1578,10 @@ namespace User{
 					break;
 				case 6:
 					OpcMTD(listaUsuarios, t);
-					break;/*
+					break;
 				case 7:
-					OpcMTC(listaUsuarios[]);
-					break;*/
+					OpcMTC(listaUsuarios, t);
+					break;
 				case 8:
 					OpcDep();
 					break;
