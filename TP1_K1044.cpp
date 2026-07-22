@@ -1621,7 +1621,7 @@ namespace User{
 }
 using namespace User;
 
-void SistemaHomeBanking();(){
+void SistemaHomeBanking(){
 	CreacionArchivos();
     SetConsoleOutputCP(CP_UTF8);
     RedimensionarVentana(85, 24);
