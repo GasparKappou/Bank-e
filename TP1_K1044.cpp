@@ -1633,12 +1633,12 @@ int main(){
 
     // Inicialización de los 5 usuarios
     RegUsuario listaUsuarios[MAX_USUARIOS] = {
-        {12345678, "Juan Gonzalez", "01/01/1990", "jgonz", "clave1", "1234", "a@a.com", "Calle 1", "CA-001", "00000001"},
-        {22333444, "Gomez Ana", "05/02/1992", "agomez", "clave2", "5678", "b@b.com", "Calle 2", "CA-002", "00000002"},
-        {33444555, "Fernandez Luis", "10/03/1985", "llopez", "clave3", "9101", "c@c.com", "Calle 3", "CA-003", "00000003"},
-        {44555666, "Castro Carla", "15/04/1995", "cdiaz", "clave4", "1122", "d@d.com", "Calle 4", "CA-004", "00000004"},
-        {1, "1", "1", "1", "1", "1", "1", "1", "1", "1"}
-    };
+        {45568423, "Juan Gonzalez", "01/01/2005", "jgonz", "12354", "11 1234 2586", "jgonz@gmail.com", "Tucuman 3500", "CA-001", "48392017"},
+        {40235468, "Gomez Ana", "05/02/2000", "agomez", "clave2", "11 1584 2186", "agomez@gmail.com", "Colon 5060", "CA-002", "07518426"},
+        {42136852, "Lopez Luis", "10/03/2002", "llopez", "qwert", "11 1110 8996", "llopez@gmail.com", "Cordoba 1240", "CA-003", "69130758"},
+        {46752369, "Diaz Carla", "15/04/2007", "cdiaz", "zxcvb", "11 2021 2286", "cdiz@gmail.com", "Corrientes 8000", "CA-004", "20481639"},
+        {47598621, "Ruiz Pedro", "20/05/2008", "pruiz", "contr2", "11 6767 9090", "pruiz@gmail.com", "Rivadavia 1245", "CA-005", "95847210"}
+    }; 
 
 
 	short t = IniciarSesion(listaUsuarios);
