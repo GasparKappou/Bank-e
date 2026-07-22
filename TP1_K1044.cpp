@@ -270,7 +270,7 @@ void BloquearCambioTamano(){
     MnsgBox(6,21,"Tecla ESCAPE seleccionar la opción del menú");
     //GoToXY(cIni,lIni);
     _gotoxy(cIni,lIni);
-GetAsyncKeyState(VK_ESCAPE);
+	GetAsyncKeyState(VK_ESCAPE);
     GetAsyncKeyState(VK_UP);
     GetAsyncKeyState(VK_DOWN);
     while(not GetAsyncKeyState(VK_ESCAPE)) {
@@ -945,7 +945,7 @@ namespace MenuyExt{
 		_gotoxy(30,6);
 		cout << "Ape. Nom: " << listaUsuarios[t].apellidoNombre << endl;
 		_gotoxy(30,7);
-		cout << "Fecha Nac: " << listaUsuarios[t].apellidoNombre << endl;
+		cout << "Fecha Nac: " << listaUsuarios[t].fecNac << endl;
 		_gotoxy(30,8);
 		cout << "Usuario: " << listaUsuarios[t].usu << endl;
 		_gotoxy(30,9);
@@ -1153,28 +1153,7 @@ namespace MenuyExt{
         archivo.open("MovimientosTC.Txt");
 
 
-        //Este codigo muestra linea por linea talcual sin formatear
-        /*
-        for(int i = 0; i < cantLin; i++){
-            getline(archivo, linea);
-            _gotoxy(15, cantLin-2-i);
-            cout << linea;
-        }
 
-        archivo.close();
-        archivo.open("MovimientosTC.Txt");
-        int dia, mes, anio;
-        string descripcion, cuotas;
-        double monto, montoFinal = 0;
-
-
-        for(int i = 0; i < cantLin; i++){
-            while(archivo >> dia >> mes >> anio >> descripcion >> cuotas >> monto){
-                montoFinal += monto;
-                //cout << dia << "-" << mes << "-" << anio << "-" << descripcion << "-" << monto;
-            }
-        }
-        */
         string dia, mes, anio, descripcion, monto, textoMonto, cuotas;
         double montoFinal = 0;
         int contador = 0;
