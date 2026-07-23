@@ -599,22 +599,41 @@ namespace Archivos{
 
 		cantDatosCA = cantDatosTD = cantDatosTC = 0;
 
+		if (archTC.is_open()) {
+		    int dia, mes, anio;
+		    char detalle[26];
+		    char cuotas[6];
+		    float importe;
+		
+		    while (archTC >> dia >> mes >> anio >> detalle >> cuotas >> importe) {
+		        if (cantDatosTC >= MAX_MOVIMIENTOS) break;
+		        datos_tc[cantDatosTC].dia = dia;
+		        datos_tc[cantDatosTC].mes = mes;
+		        datos_tc[cantDatosTC].anio = anio;
+		        strcpy(datos_tc[cantDatosTC].detalle, detalle);
+		        strcpy(datos_tc[cantDatosTC].cuotas, cuotas);
+		        datos_tc[cantDatosTC].importe = importe;
+		        datos_tc[cantDatosTC].fecha = anio * 10000 + mes * 100 + dia;
+		        cantDatosTC++;
+		    }
+		}
+		
 		if (archCA.is_open()) {
-			int dia, mes, anio;
-			char tipoMov;
-			char detalle[26];
-			float importe;
-
-			while (archCA >> dia >> mes >> anio >> tipoMov >> detalle >> importe) {
-				if (cantDatosCA >= MAX_MOVIMIENTOS) break;
-				datos_ca[cantDatosCA].dia = dia;
-				datos_ca[cantDatosCA].mes = mes;
-				datos_ca[cantDatosCA].anio = anio;
-				datos_ca[cantDatosCA].tipoMov = tipoMov;
-				strcpy(datos_ca[cantDatosCA].detalle, detalle);
-				datos_ca[cantDatosCA].importe = importe;
-				datos_ca[cantDatosCA].fecha = anio * 10000 + mes * 100 + dia;
-				cantDatosCA++;
+		    int dia, mes, anio;
+		    char tipoMov;
+		    char detalle[26];
+		    float importe;
+		
+		    while (archCA >> dia >> mes >> anio >> tipoMov >> detalle >> importe) {
+		        if (cantDatosCA >= MAX_MOVIMIENTOS) break;
+		        datos_ca[cantDatosCA].dia = dia;
+		        datos_ca[cantDatosCA].mes = mes;
+		        datos_ca[cantDatosCA].anio = anio;
+		        datos_ca[cantDatosCA].tipoMov = tipoMov;
+		        strcpy(datos_ca[cantDatosCA].detalle, detalle);
+		        datos_ca[cantDatosCA].importe = importe;
+		        datos_ca[cantDatosCA].fecha = anio * 10000 + mes * 100 + dia;
+		        cantDatosCA++;
 			}
 		}
 
@@ -669,6 +688,7 @@ namespace Archivos{
 				cantDatosTC++;
 			}
 		}
+		
 		archTC.close();
 		archCA.close();
 		archTD.close();
@@ -697,11 +717,12 @@ namespace Archivos{
 		}
 
 		for (int i = 0; i < cantDatosTC; i++) {
-			archTC << right << setw(2) << datos_tc[i].dia << " "
-			       << right << setw(2) << datos_tc[i].mes << " "
-			       << right << setw(4) << datos_tc[i].anio << " "
-			       << left << setw(25) << datos_tc[i].detalle << " "
-			       << right << fixed << setprecision(2) << setw(11) << datos_tc[i].importe << endl;
+		    archTC << right << setw(2) << datos_tc[i].dia << " "
+		           << right << setw(2) << datos_tc[i].mes << " "
+		           << right << setw(4) << datos_tc[i].anio << " "
+		           << left << setw(25) << datos_tc[i].detalle << " "
+		           << left << setw(5) << datos_tc[i].cuotas << " "          // <-- faltaba
+		           << right << fixed << setprecision(2) << setw(11) << datos_tc[i].importe << endl;
 		}
 
 		archCA.close();
@@ -1200,7 +1221,7 @@ namespace MenuyExt{
 	void OpcDep(){
 		OcultarCursor();
 		Plantilla("Deposito");
-		_textcolor(15);
+		_textcolor(3);
 		float cap;
 		char fecha[11];
 		int dia, mes, anio;
@@ -1209,6 +1230,7 @@ namespace MenuyExt{
 		_gotoxy(30,6);
 		cout << "Ingrese fecha con formato DD/MM/AAAA";
 		_gotoxy(30,7);
+		_textcolor(15);
 		cout << "Fecha: ";
 		_gotoxy(30,10);
 		cout << "Monto: ";
@@ -1284,15 +1306,27 @@ namespace MenuyExt{
 	    archivo.close();
 	    return total;
 	}
-
+	
+	double CalcularTotalTC(const string& nombreArchivo){
+	    ifstream archivo(nombreArchivo);
+	    int d, m, a;
+	    string descripcion, cuotas;
+	    double monto, total = 0;
+	    while(archivo >> d >> m >> a >> descripcion >> cuotas >> monto){
+	        total += monto;
+	    }
+	    archivo.close();
+	    return total;
+	}
+	
 	void OpcCom(){
 	    OcultarCursor();
 	    Plantilla("Compra");
-
+	
 	    double TOTALAC = CalcularTotalCA("MovimientosCA.Txt");
-
+	
 	    if(TOTALAC > 0){
-
+	
 	        float cap;
 	        char fecha[11];
 	        int dia, mes, anio;
@@ -1306,7 +1340,7 @@ namespace MenuyExt{
 	        _gotoxy(30,10); cout << "Monto: ";
 	        _gotoxy(30,13); cout << "Detalle: ";
 	        _gotoxy(30,16); cout << "Monto D,C: ";
-
+	
 	        _gotoxy(40,7);
 	        Borrado(40);
 	        _gotoxy(40,7); cin >> fecha;
@@ -1337,40 +1371,55 @@ namespace MenuyExt{
 	        }while(det.length() > 25);
 	        _gotoxy(30,14);
 	        Borrado(40);
-
+	
 	        double TOTALTD = CalcularTotal("MovimientosTD.Txt");
-	        double TOTALTC = CalcularTotal("MovimientosTC.Txt");
-
+	        double TOTALTC = CalcularTotalTC("MovimientosTC.Txt");
+	        
+			if(cap > TOTALTD && cap > TOTALTC){
+			    _textcolor(4);
+			    _gotoxy(30,16); cout << "*Error, el monto excede el capital";
+			    _gotoxy(30,17); cout << "disponible tanto en Debito como en Credito";
+			    _textcolor(14);
+			    Sleep(3000);
+			    _gotoxy(10,21);
+			    Pausa();
+			    OcultarCursor();
+			    return; 
+			}
+			
+	        bool valido;
 	        do{
+	            valido = true;
 	            _gotoxy(41,16); cin >> tipo;
 	            tipo = toupper(tipo);
+	
 	            if(tipo != 'D' && tipo != 'C'){
-	                _gotoxy(40,16);
-	                Borrado(40);
+	                valido = false;
 	                _textcolor(4);
 	                _gotoxy(30,17); cout << "*Error, modo no válido";
 	                _textcolor(14);
-	            }else if(tipo == 'D' && cap < TOTALTD){
-
-	                _gotoxy(40,16);
-	                Borrado(40);
+	            }else if(tipo == 'D' && cap > TOTALTD){
+	                valido = false;
 	                _textcolor(4);
 	                _gotoxy(30,17); cout << "*Error, excede el capital actual";
 	                _textcolor(14);
-
-	            }else if(tipo == 'C' && cap < TOTALTC){
-
-	                _gotoxy(40,16);
-	                Borrado(40);
+	            }else if(tipo == 'C' && cap > TOTALTC){
+	                valido = false;
 	                _textcolor(4);
 	                _gotoxy(30,17); cout << "*Error, excede el capital disponible en credito";
 	                _textcolor(14);
 	            }
-
-	        }while(tipo != 'D' && tipo != 'C');
+	
+	            if(!valido){
+	                Sleep(1500);
+	                _gotoxy(40,16); Borrado(40);
+	                _gotoxy(30,17); Borrado(50);
+	            }
+	        }while(!valido);
+	
 	        _gotoxy(30,17);
-	        Borrado(40);
-
+	        Borrado(50);
+	
 	        ostringstream  line;
 	        line << right << setw(2) << dia << " "
 	                << right << setw(2) << mes << " "
@@ -1393,26 +1442,25 @@ namespace MenuyExt{
 	                    << right << setw(2) << mes << " "
 	                    << right << setw(4) << anio<< " "
 	                    << left << setw(25) << det << " "
-	                    << right << setw(5) << "     " << " "
+	                    << left << setw(5) << "01/03" << " "
 	                    << right << fixed << setprecision(2) << setw(11) << cap;
 	            agregarLineaArriba("MovimientosTC.Txt", line.str());
 	        }
 	        cargarMovimientosDesdeArchivos();
 	        ordenamiento(datos_ca, datos_td, datos_tc, cantDatosCA, cantDatosTD, cantDatosTC);
 	        guardarMovimientosEnArchivos();
-
+	
 	    }else{
-
+	
 	        _textcolor(4);
 	        _gotoxy(25,11);
 	        cout << "Actualmente posee saldo Negativo/Nulo";
 	        _gotoxy(25,12);
 	        cout << "No podrá realizar compras de ningun tipo";
-
+	
 	    }
-
+	    _gotoxy(10,25);	
 	    Sleep(3000);
-	    _gotoxy(10,21);
 	    Pausa();
 	    OcultarCursor();
 	}
