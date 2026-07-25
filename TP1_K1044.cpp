@@ -541,63 +541,62 @@ namespace Archivos
 
 	void carga(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[])
 	{
-		srand(time(NULL));
-		int diaHoy, mesHoy, anioHoy, ds;
 
-		for (short i = 0; i < 15; i++)
-		{
 
-			short d = (rand() % 28) + 1;
-			short m = (rand() % 12) + 1;
-			short a = 2025 + (rand() % 2);
+    for (short i = 0; i < 15; i++)
+    {
+        short d = (i * 3) % 28 + 1;
+        short m = (i * 5) % 12 + 1;
+        short a = 2025 + (i % 2);
 
-			long fechaAleatoria = (a * 10000) + (m * 100) + d;
+        long fechaAleatoria = (a * 10000) + (m * 100) + d;
 
-			datos_ca[i].fecha = fechaAleatoria;
-			datos_ca[i].dia = d;
-			datos_ca[i].mes = m;
-			datos_ca[i].anio = a;
-			datos_ca[i].tipoMov = (i % 2 == 0) ? 'D' : 'H';
+        datos_ca[i].fecha = fechaAleatoria;
+        datos_ca[i].dia = d;
+        datos_ca[i].mes = m;
+        datos_ca[i].anio = a;
+        datos_ca[i].tipoMov = (i % 2 == 0) ? 'D' : 'H';
 
-			int indiceRandom = rand() % 5;
-			strcpy(datos_ca[i].detalle, asuntosCA[indiceRandom]);
-			datos_ca[i].importe = rand() % 10000;
-		}
+        int indiceFijo = i % 5;
+        strcpy(datos_ca[i].detalle, asuntosCA[indiceFijo]);
+        datos_ca[i].importe = (float)((i * 733) % 10000);
+    }
 
-		for (short i = 0; i < 15; i++)
-		{
-			short d = (rand() % 28) + 1;
-			short m = (rand() % 12) + 1;
-			short a = 2025 + (rand() % 2);
-			long fechaAleatoria = (a * 10000) + (m * 100) + d;
+    for (short i = 0; i < 15; i++)
+    {
+        short d = (i * 7) % 28 + 1;
+        short m = (i * 2) % 12 + 1;
+        short a = 2025 + (i % 2);
+        long fechaAleatoria = (a * 10000) + (m * 100) + d;
 
-			datos_td[i].fecha = fechaAleatoria;
-			datos_td[i].dia = d;
-			datos_td[i].mes = m;
-			datos_td[i].anio = a;
+        datos_td[i].fecha = fechaAleatoria;
+        datos_td[i].dia = d;
+        datos_td[i].mes = m;
+        datos_td[i].anio = a;
 
-			int indiceRandom = rand() % 5;
-			strcpy(datos_td[i].detalle, asuntosTD[indiceRandom]);
-			datos_td[i].importe = rand() % 100000;
-		}
+        int indiceFijo = i % 5;
+        strcpy(datos_td[i].detalle, asuntosTD[indiceFijo]);
+        datos_td[i].importe = (float)((i * 6173) % 100000);
+    }
 
-		for (short i = 0; i < 15; i++)
-		{
-			short d = (rand() % 28) + 1;
-			short m = (rand() % 12) + 1;
-			short a = 2025 + (rand() % 2);
-			long fechaAleatoria = (a * 10000) + (m * 100) + d;
+    for (short i = 0; i < 15; i++)
+    {
+        short d = (i * 11) % 28 + 1;
+        short m = (i * 4) % 12 + 1;
+        short a = 2025 + (i % 2);
+        long fechaAleatoria = (a * 10000) + (m * 100) + d;
 
-			datos_tc[i].fecha = fechaAleatoria;
-			datos_tc[i].dia = d;
-			datos_tc[i].mes = m;
-			datos_tc[i].anio = a;
+        datos_tc[i].fecha = fechaAleatoria;
+        datos_tc[i].dia = d;
+        datos_tc[i].mes = m;
+        datos_tc[i].anio = a;
 
-			int indiceRandom = rand() % 5;
-			strcpy(datos_tc[i].detalle, asuntosTC[indiceRandom]);
-			strcpy(datos_tc[i].cuotas, "01/03");
-			datos_tc[i].importe = rand() % 25000;
-		}
+        int indiceFijo = i % 5;
+        strcpy(datos_tc[i].detalle, asuntosTC[indiceFijo]);
+        strcpy(datos_tc[i].cuotas, "01/03");
+        datos_tc[i].importe = (float)((i * 1847) % 25000);
+    }
+    
 		ordenamiento(datos_ca, datos_td, datos_tc, 15, 15, 15);
 	}
 
