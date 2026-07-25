@@ -32,12 +32,14 @@ enum Colores
 
 typedef char str25[26];
 
+// Módulo de utilidades de menú y navegación.
 namespace MenuyExt
 {
 	void Borrado(short c);
 }
 using namespace MenuyExt;
 
+// Módulo para funciones de control de la consola y pantalla.
 namespace Screen
 {
 
@@ -375,6 +377,8 @@ namespace Screen
 		return Menu - lIni;
 	} // MenuNavegar
 }
+
+// Módulo para obtener la fecha y hora del sistema.
 namespace FechaHora
 {
 
@@ -422,6 +426,7 @@ const int MAX_USUARIOS = 5;
 using namespace Screen;
 using namespace FechaHora;
 
+// Módulo para la gestión y persistencia de archivos de movimientos.
 namespace Archivos
 {
 	typedef record
@@ -542,61 +547,60 @@ namespace Archivos
 	void carga(MovimientosCA datos_ca[], MovimientosTD datos_td[], MovimientosTC datos_tc[])
 	{
 
+		for (short i = 0; i < 15; i++)
+		{
+			short d = (i * 3) % 28 + 1;
+			short m = (i * 5) % 12 + 1;
+			short a = 2025 + (i % 2);
 
-    for (short i = 0; i < 15; i++)
-    {
-        short d = (i * 3) % 28 + 1;
-        short m = (i * 5) % 12 + 1;
-        short a = 2025 + (i % 2);
+			long fechaAleatoria = (a * 10000) + (m * 100) + d;
 
-        long fechaAleatoria = (a * 10000) + (m * 100) + d;
+			datos_ca[i].fecha = fechaAleatoria;
+			datos_ca[i].dia = d;
+			datos_ca[i].mes = m;
+			datos_ca[i].anio = a;
+			datos_ca[i].tipoMov = (i % 2 == 0) ? 'D' : 'H';
 
-        datos_ca[i].fecha = fechaAleatoria;
-        datos_ca[i].dia = d;
-        datos_ca[i].mes = m;
-        datos_ca[i].anio = a;
-        datos_ca[i].tipoMov = (i % 2 == 0) ? 'D' : 'H';
+			int indiceFijo = i % 5;
+			strcpy(datos_ca[i].detalle, asuntosCA[indiceFijo]);
+			datos_ca[i].importe = (float)((i * 733) % 10000);
+		}
 
-        int indiceFijo = i % 5;
-        strcpy(datos_ca[i].detalle, asuntosCA[indiceFijo]);
-        datos_ca[i].importe = (float)((i * 733) % 10000);
-    }
+		for (short i = 0; i < 15; i++)
+		{
+			short d = (i * 7) % 28 + 1;
+			short m = (i * 2) % 12 + 1;
+			short a = 2025 + (i % 2);
+			long fechaAleatoria = (a * 10000) + (m * 100) + d;
 
-    for (short i = 0; i < 15; i++)
-    {
-        short d = (i * 7) % 28 + 1;
-        short m = (i * 2) % 12 + 1;
-        short a = 2025 + (i % 2);
-        long fechaAleatoria = (a * 10000) + (m * 100) + d;
+			datos_td[i].fecha = fechaAleatoria;
+			datos_td[i].dia = d;
+			datos_td[i].mes = m;
+			datos_td[i].anio = a;
 
-        datos_td[i].fecha = fechaAleatoria;
-        datos_td[i].dia = d;
-        datos_td[i].mes = m;
-        datos_td[i].anio = a;
+			int indiceFijo = i % 5;
+			strcpy(datos_td[i].detalle, asuntosTD[indiceFijo]);
+			datos_td[i].importe = (float)((i * 6173) % 100000);
+		}
 
-        int indiceFijo = i % 5;
-        strcpy(datos_td[i].detalle, asuntosTD[indiceFijo]);
-        datos_td[i].importe = (float)((i * 6173) % 100000);
-    }
+		for (short i = 0; i < 15; i++)
+		{
+			short d = (i * 11) % 28 + 1;
+			short m = (i * 4) % 12 + 1;
+			short a = 2025 + (i % 2);
+			long fechaAleatoria = (a * 10000) + (m * 100) + d;
 
-    for (short i = 0; i < 15; i++)
-    {
-        short d = (i * 11) % 28 + 1;
-        short m = (i * 4) % 12 + 1;
-        short a = 2025 + (i % 2);
-        long fechaAleatoria = (a * 10000) + (m * 100) + d;
+			datos_tc[i].fecha = fechaAleatoria;
+			datos_tc[i].dia = d;
+			datos_tc[i].mes = m;
+			datos_tc[i].anio = a;
 
-        datos_tc[i].fecha = fechaAleatoria;
-        datos_tc[i].dia = d;
-        datos_tc[i].mes = m;
-        datos_tc[i].anio = a;
+			int indiceFijo = i % 5;
+			strcpy(datos_tc[i].detalle, asuntosTC[indiceFijo]);
+			strcpy(datos_tc[i].cuotas, "01/03");
+			datos_tc[i].importe = (float)((i * 1847) % 25000);
+		}
 
-        int indiceFijo = i % 5;
-        strcpy(datos_tc[i].detalle, asuntosTC[indiceFijo]);
-        strcpy(datos_tc[i].cuotas, "01/03");
-        datos_tc[i].importe = (float)((i * 1847) % 25000);
-    }
-    
 		ordenamiento(datos_ca, datos_td, datos_tc, 15, 15, 15);
 	}
 
@@ -869,6 +873,7 @@ namespace Archivos
 }
 using namespace Archivos;
 
+// Módulo de funciones de interfaz y menús del sistema.
 namespace MenuyExt
 {
 	// tamaño de la ventana
@@ -969,6 +974,7 @@ namespace MenuyExt
 		char cbu[40];
 	} RegUsuario;
 
+	// Opción de menú para generar un token de seguridad.
 	void Menu_Token()
 	{
 		OcultarCursor();
@@ -1068,6 +1074,7 @@ namespace MenuyExt
 		} while (tasa < 0);
 	}
 
+	// Opción de menú para simular un plazo fijo.
 	void Menu_SPF()
 	{
 		OcultarCursor();
@@ -1089,6 +1096,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para realizar una inversión a plazo fijo.
 	void Menu_IPF()
 	{
 		OcultarCursor();
@@ -1126,6 +1134,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para mostrar los datos personales del usuario.
 	void Menu_DP(RegUsuario listaUsuarios[], short t)
 	{
 
@@ -1159,6 +1168,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para mostrar el CBU del usuario.
 	void Menu_CBU(RegUsuario listaUsuarios[], short t)
 	{
 		OcultarCursor();
@@ -1176,6 +1186,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para visualizar los movimientos de caja de ahorro.
 	void Menu_MCA(RegUsuario listaUsuarios[], short t)
 	{
 		ifstream archivo("MovimientosCA.Txt");
@@ -1246,6 +1257,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para visualizar los movimientos de tarjeta de débito.
 	void Menu_MTD(RegUsuario listaUsuarios[], short t)
 	{
 		ifstream archivo("MovimientosTD.Txt");
@@ -1320,6 +1332,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para visualizar los movimientos de tarjeta de crédito.
 	void Menu_MTC(RegUsuario listaUsuarios[], short t)
 	{
 		ifstream archivo("MovimientosTC.Txt");
@@ -1394,6 +1407,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para registrar un depósito.
 	void Menu_Dep()
 	{
 		OcultarCursor();
@@ -1479,6 +1493,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para registrar una compra.
 	void Menu_Com()
 	{
 		OcultarCursor();
@@ -1659,6 +1674,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para ordenar la lista de usuarios.
 	void Menu_OU(RegUsuario listaUsuarios[])
 	{
 		OcultarCursor();
@@ -1707,6 +1723,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
+	// Opción de menú para cerrar la sesión activa.
 	void Menu_CS()
 	{
 		OcultarCursor();
@@ -1731,9 +1748,11 @@ namespace MenuyExt
 }
 using namespace MenuyExt;
 
+// Módulo para la gestión de usuarios y acceso al sistema.
 namespace User
 {
 
+	// Función para buscar un usuario registrado en el sistema.
 	short Busqueda(RegUsuario listaUsuarios[], char UserNom[], long UserDNI, char UserClave[])
 	{
 		short k = -1;
@@ -1747,6 +1766,7 @@ namespace User
 		return k;
 	}
 
+	// Menú de inicio de sesión del sistema.
 	short MenuLogin(RegUsuario listaUsuarios[])
 	{
 
@@ -1799,6 +1819,7 @@ namespace User
 		return t;
 	}
 
+	// Menú principal de opciones para el usuario autenticado.
 	void Menu_User(RegUsuario listaUsuarios[], short t)
 	{
 		short tam = 12;
@@ -1815,7 +1836,8 @@ namespace User
 							  {"Ordenar Usuarios"},
 							  {"Cerrar Sesion"}};
 		int opc;
-		do{
+		do
+		{
 			_textbackground(0);
 			GenMenu(aMenu, tam);
 			opc = MenuNavegar(aMenu, 5, 16, 25);
@@ -1904,3 +1926,58 @@ int main()
 	SistemaHomeBanking();
 	return 0;
 }
+
+
+// ============================================================================
+// Funciones creadas/agregadas por nosotros
+// (NO pertenecen al listado de funciones base entregado por el profesor)
+// ============================================================================
+//
+// Modulo Archivos (modulo completo, desarrollado enteramente por el grupo):
+//   - ordenamiento()
+//   - carga()
+//   - impresion()
+//   - CreacionArchivos()
+//   - CalcularTotal()
+//   - agregarLineaArriba()
+//   - cargarMovimientosDesdeArchivos()
+//   - guardarMovimientosEnArchivos()
+//   - CalcularTotalCA()
+//   - CalcularTotalTC()
+//
+// Modulo MenuyExt (funciones agregadas ademas de las heredadas del profesor):
+//   - RedimensionarVentana()
+//   - LimpiarInteriorMarco()
+//   - Borrado()
+//   - GenMenu()
+//   - Plantilla()
+//   - Menu_Token()
+//   - datosINV()
+//   - Menu_SPF()
+//   - Menu_IPF()
+//   - Menu_DP()
+//   - Menu_CBU()
+//   - Menu_MCA()
+//   - Menu_MTD()
+//   - Menu_MTC()
+//   - Menu_Dep()
+//   - Menu_Com()
+//   - Menu_OU()
+//   - Menu_CS()
+//
+// Modulo User (modulo completo, desarrollado enteramente por el grupo):
+//   - Busqueda()
+//   - MenuLogin()
+//   - Menu_User()
+//
+// Funcion principal del sistema y punto de entrada del programa:
+//   - SistemaHomeBanking()
+//   - main()
+//
+// CASO A REVISAR: dentro de MenuyExt existe una segunda version de
+// GetDate(int &year, int &mes, int &dia) con 3 parametros, marcada en
+// el codigo con el comentario "modificacion de funcion". Comparte el
+// nombre con la GetDate() original del profesor (modulo FechaHora, con
+// 4 parametros: year, mes, dia, ds), pero es una implementacion propia
+// y distinta -> probablemente tambien la hicimos nosotros.
+// ============================================================================
