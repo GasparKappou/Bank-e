@@ -107,7 +107,7 @@ namespace Screen {
     ActualizaColores(ObtenerColorTextoActual(),color);
   } // _textbackground
 
-  void _clrscr() { //Clon de _clrscr() LOCALIZADO (Solo limpia área de la ventana)
+  void _clrscr() { //Clon de _clrscr() (Solo limpia área de la ventana)
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(hConsole, &csbi);
@@ -208,6 +208,7 @@ namespace Screen {
     _gotoxy(5,20);
     Borrado(30);
   } // Espera
+
 
   void BarraTitulo() {
     SetConsoleTitleA("Home Banking Bank-e");
@@ -729,6 +730,31 @@ namespace Archivos{
 		archTD.close();
 		archTC.close();
 	}
+	
+		double CalcularTotalCA(const string& nombreArchivo){
+	    ifstream archivo(nombreArchivo);
+	    int d, m, a;
+	    char tipoMov;
+	    string descripcion;
+	    double monto, total = 0;
+	    while(archivo >> d >> m >> a >> tipoMov >> descripcion >> monto){
+	        total += monto;
+	    }
+	    archivo.close();
+	    return total;
+	}
+	
+	double CalcularTotalTC(const string& nombreArchivo){
+	    ifstream archivo(nombreArchivo);
+	    int d, m, a;
+	    string descripcion, cuotas;
+	    double monto, total = 0;
+	    while(archivo >> d >> m >> a >> descripcion >> cuotas >> monto){
+	        total += monto;
+	    }
+	    archivo.close();
+	    return total;
+	}
 }
 using namespace Archivos;
 
@@ -821,7 +847,7 @@ namespace MenuyExt{
 		char cbu[40];
 	}RegUsuario;
 
-	void OpcToken(){
+	void Menu_Token(){
 		OcultarCursor();
 		Plantilla("Generar Token");
 		srand(time(NULL));
@@ -901,7 +927,7 @@ namespace MenuyExt{
 		}while(tasa < 0);
 	}
 
-	void OpcSPF(){
+	void Menu_SPF(){
 		OcultarCursor();
 		Plantilla("Simulación Plazo Fijo");
 		float cap, tasa;
@@ -921,7 +947,7 @@ namespace MenuyExt{
 	}
 
 
-	void OpcIPF(){
+	void Menu_IPF(){
 		OcultarCursor();
 		Plantilla("Inversion Plazo Fijo");
 		float cap, tasa;
@@ -956,7 +982,7 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void OpcDP(RegUsuario listaUsuarios[], short t){
+	void Menu_DP(RegUsuario listaUsuarios[], short t){
 
 		OcultarCursor();
 		Plantilla("Datos Personales");
@@ -988,7 +1014,7 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void OpcCBU(RegUsuario listaUsuarios[], short t){
+	void Menu_CBU(RegUsuario listaUsuarios[], short t){
 		OcultarCursor();
 		Plantilla("Clave Única Bancaria");
 		_textcolor(15);
@@ -1004,7 +1030,7 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void OpcMCA(RegUsuario listaUsuarios[], short t){
+	void Menu_MCA(RegUsuario listaUsuarios[], short t){
 		ifstream archivo("MovimientosCA.Txt");
 		string linea = "";
         int cantLin = 11;
@@ -1072,7 +1098,7 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void OpcMTD(RegUsuario listaUsuarios[], short t){
+	void Menu_MTD(RegUsuario listaUsuarios[], short t){
 		ifstream archivo("MovimientosTD.Txt");
 		string linea = "";
         int cantLin = 11;
@@ -1144,7 +1170,7 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void OpcMTC(RegUsuario listaUsuarios[], short t){
+	void Menu_MTC(RegUsuario listaUsuarios[], short t){
 		ifstream archivo("MovimientosTC.Txt");
 		string linea = "";
         int cantLin = 11;
@@ -1218,7 +1244,7 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void OpcDep(){
+	void Menu_Dep(){
 		OcultarCursor();
 		Plantilla("Deposito");
 		_textcolor(3);
@@ -1293,33 +1319,8 @@ namespace MenuyExt{
 		OcultarCursor();
 
 	}
-
-	double CalcularTotalCA(const string& nombreArchivo){
-	    ifstream archivo(nombreArchivo);
-	    int d, m, a;
-	    char tipoMov;
-	    string descripcion;
-	    double monto, total = 0;
-	    while(archivo >> d >> m >> a >> tipoMov >> descripcion >> monto){
-	        total += monto;
-	    }
-	    archivo.close();
-	    return total;
-	}
 	
-	double CalcularTotalTC(const string& nombreArchivo){
-	    ifstream archivo(nombreArchivo);
-	    int d, m, a;
-	    string descripcion, cuotas;
-	    double monto, total = 0;
-	    while(archivo >> d >> m >> a >> descripcion >> cuotas >> monto){
-	        total += monto;
-	    }
-	    archivo.close();
-	    return total;
-	}
-	
-	void OpcCom(){
+	void Menu_Com(){
 	    OcultarCursor();
 	    Plantilla("Compra");
 	
@@ -1465,7 +1466,7 @@ namespace MenuyExt{
 	    OcultarCursor();
 	}
 
-	void OpcOU(RegUsuario listaUsuarios[]){
+	void Menu_OU(RegUsuario listaUsuarios[]){
 		OcultarCursor();
 		Plantilla("Ordenar Usuarios");
 
@@ -1503,7 +1504,7 @@ namespace MenuyExt{
 		OcultarCursor();
 	}
 
-	void OpcCS(){
+	void Menu_CS(){
 		OcultarCursor();
 		LimpiarInteriorMarco(2, 2, 81, 22);
 
@@ -1540,7 +1541,7 @@ namespace User{
 		return k;
 	}
 
-	short IniciarSesion(RegUsuario listaUsuarios[]){
+	short MenuLogin(RegUsuario listaUsuarios[]){
 
 		short i = 0;
 		short t;
@@ -1586,7 +1587,7 @@ namespace User{
 		return t;
 	}
 
-	void MenuUser(RegUsuario listaUsuarios[], short t){
+	void Menu_User(RegUsuario listaUsuarios[], short t){
 		short tam = 12;
 		char aMenu[12][25] = {{"Token"},
 							{"Simulacion Plazo Fijo"},
@@ -1607,40 +1608,40 @@ namespace User{
 	 		opc = MenuNavegar(aMenu, 5, 16, 25);
 			switch(opc){
 				case 0:
-					OpcToken();
+					Menu_Token();
 					break;
 				case 1:
-					OpcSPF();
+					Menu_SPF();
 					break;
 				case 2:
-					OpcIPF();
+					Menu_IPF();
 					break;
 				case 3:
-					OpcDP(listaUsuarios, t);
+					Menu_DP(listaUsuarios, t);
 					break;
 				case 4:
-					OpcCBU(listaUsuarios, t);
+					Menu_CBU(listaUsuarios, t);
 					break;
 				case 5:
-					OpcMCA(listaUsuarios, t);
+					Menu_MCA(listaUsuarios, t);
 					break;
 				case 6:
-					OpcMTD(listaUsuarios, t);
+					Menu_MTD(listaUsuarios, t);
 					break;
 				case 7:
-					OpcMTC(listaUsuarios, t);
+					Menu_MTC(listaUsuarios, t);
 					break;
 				case 8:
-					OpcDep();
+					Menu_Dep();
 					break;
 				case 9:
-					OpcCom();
+					Menu_Com();
 					break;
 				case 10:
-					OpcOU(listaUsuarios);
+					Menu_OU(listaUsuarios);
 					break;
 				case 11:
-					OpcCS();
+					Menu_CS();
 					break;
 			}
 		}while(opc != 11);
@@ -1668,9 +1669,9 @@ void SistemaHomeBanking(){
     }; 
 
 
-	short t = IniciarSesion(listaUsuarios);
+	short t = MenuLogin(listaUsuarios);
 	if(t != -1){
-		MenuUser(listaUsuarios, t);
+		Menu_User(listaUsuarios, t);
 	}else{
 		LimpiarInteriorMarco(2, 2, 81, 22);
 		_gotoxy(25, 10); cout << "Ud. Deberá dirigirse a un" << endl;
