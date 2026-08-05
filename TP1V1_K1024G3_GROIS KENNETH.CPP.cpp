@@ -1,3 +1,18 @@
+/*=============================================================================
+    TRABAJO PRÁCTICO
+    ALGORITMOS Y ESTRUCTURAS DE DATOS
+    UTN - FRBA
+    CURSO: K1044
+
+    INTEGRANTES:
+      - Kenneth Grois               (Legajo: 260.205-2)
+      - Gaspar Kappou               (Legajo: 260.238-6)
+      - Dino Valentino Corigliano  (Legajo: 260.087-0)
+      - Lautaro Santinón           (Legajo: 260.467-0)
+      - Lorenzo Urzua Montelpare   (Legajo: 260.523-5)
+      - Emanuel Díaz               (Legajo: 260.108-4)
+=============================================================================*/
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
