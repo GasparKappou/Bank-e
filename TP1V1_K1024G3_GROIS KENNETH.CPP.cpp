@@ -320,6 +320,11 @@ namespace Screen
 		MnsgBox(6, 21, "Tecla ESCAPE seleccionar la opción del menú");
 		// GoToXY(cIni,lIni);
 		_gotoxy(cIni, lIni);
+		
+		_textcolor(14);
+		cout << aMenu[Menu - lIni];
+		_gotoxy(cIni, lIni);
+		
 		GetAsyncKeyState(VK_ESCAPE);
 		GetAsyncKeyState(VK_UP);
 		GetAsyncKeyState(VK_DOWN);
