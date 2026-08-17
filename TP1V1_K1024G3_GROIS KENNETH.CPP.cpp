@@ -1,4 +1,4 @@
-/*=============================================================================
+  /*=============================================================================
     TRABAJO PRÁCTICO
     ALGORITMOS Y ESTRUCTURAS DE DATOS
     UTN - FRBA
@@ -666,10 +666,23 @@ namespace Archivos
 
 	void CreacionArchivos()
 	{
+		ifstream testCA("MovimientosCA.Txt");
+		ifstream testTD("MovimientosTD.Txt");
+		ifstream testTC("MovimientosTC.Txt");
+	
+		bool existenArchivos = testCA.good() && testTD.good() && testTC.good();
+	
+		testCA.close();
+		testTD.close();
+		testTC.close();
+	
+		if (existenArchivos)
+			return; 
+	
 		MovimientosCA datos_ca[100];
 		MovimientosTD datos_td[100];
 		MovimientosTC datos_tc[100];
-
+	
 		carga(datos_ca, datos_td, datos_tc);
 		impresion(datos_ca, datos_td, datos_tc, 15, 15, 15);
 	}
@@ -1041,7 +1054,7 @@ namespace MenuyExt
 		cout << "Tasa: ";
 
 		_textcolor(14);
-
+		MostrarCursor(); 
 		do
 		{
 			_gotoxy(40, 7);
@@ -1102,7 +1115,6 @@ namespace MenuyExt
 		float cap, tasa;
 		int time;
 		datosINV(cap, tasa, time);
-
 		_gotoxy(30, 14);
 		Borrado(40);
 
@@ -1124,7 +1136,7 @@ namespace MenuyExt
 		float cap, tasa;
 		int time;
 		datosINV(cap, tasa, time);
-
+		MostrarCursor(); 
 		_gotoxy(30, 14);
 		Borrado(40);
 
@@ -1430,7 +1442,7 @@ namespace MenuyExt
 	// Opción de menú para registrar un depósito.
 	void Menu_Dep()
 	{
-		OcultarCursor();
+		MostrarCursor(); 
 		Plantilla("Deposito");
 		_textcolor(3);
 		float cap;
@@ -1516,7 +1528,7 @@ namespace MenuyExt
 	// Opción de menú para registrar una compra.
 	void Menu_Com()
 	{
-		OcultarCursor();
+		MostrarCursor(); 
 		Plantilla("Compra");
 
 		double TOTALAC = CalcularTotalCA("MovimientosCA.Txt");
