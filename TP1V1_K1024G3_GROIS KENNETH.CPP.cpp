@@ -335,11 +335,11 @@ namespace Screen
 		MnsgBox(6, 21, "Tecla ESCAPE seleccionar la opción del menú");
 		// GoToXY(cIni,lIni);
 		_gotoxy(cIni, lIni);
-		
+
 		_textcolor(14);
 		cout << aMenu[Menu - lIni];
 		_gotoxy(cIni, lIni);
-		
+
 		GetAsyncKeyState(VK_ESCAPE);
 		GetAsyncKeyState(VK_UP);
 		GetAsyncKeyState(VK_DOWN);
@@ -669,20 +669,20 @@ namespace Archivos
 		ifstream testCA("MovimientosCA.Txt");
 		ifstream testTD("MovimientosTD.Txt");
 		ifstream testTC("MovimientosTC.Txt");
-	
+
 		bool existenArchivos = testCA.good() && testTD.good() && testTC.good();
-	
+
 		testCA.close();
 		testTD.close();
 		testTC.close();
-	
+
 		if (existenArchivos)
-			return; 
-	
+			return;
+
 		MovimientosCA datos_ca[100];
 		MovimientosTD datos_td[100];
 		MovimientosTC datos_tc[100];
-	
+
 		carga(datos_ca, datos_td, datos_tc);
 		impresion(datos_ca, datos_td, datos_tc, 15, 15, 15);
 	}
@@ -1054,7 +1054,7 @@ namespace MenuyExt
 		cout << "Tasa: ";
 
 		_textcolor(14);
-		MostrarCursor(); 
+		MostrarCursor();
 		do
 		{
 			_gotoxy(40, 7);
@@ -1136,7 +1136,7 @@ namespace MenuyExt
 		float cap, tasa;
 		int time;
 		datosINV(cap, tasa, time);
-		MostrarCursor(); 
+		MostrarCursor();
 		_gotoxy(30, 14);
 		Borrado(40);
 
@@ -1249,15 +1249,22 @@ namespace MenuyExt
 
 		archivo.open("MovimientosCA.Txt");
 
-		string dia, mes, anio, descripcion, monto;
+		string dia, mes, anio, monto;
+		char descripcion[26];
 		char tipoMov;
 		int contador = 0, saldo = 75;
 		double montoFinal = 0;
 
-		while (archivo >> dia >> mes >> anio >> tipoMov >> descripcion >> monto)
-		{
+		for(int i = 0; i < cantLin-11; i++)
+        {
+            archivo >> dia >> mes >> anio >> tipoMov;
+            archivo.ignore();
+            archivo.get(descripcion, 26);
+            archivo.ignore();
+            archivo >> monto;
 
-			dia = stoi(dia) < 10 ? dia = "0" + dia : dia;
+
+            dia = stoi(dia) < 10 ? dia = "0" + dia : dia;
 			mes = stoi(mes) < 10 ? mes = "0" + mes : mes;
 			int espacio = tipoMov == 'D' ? 50 : 62;
 			montoFinal += tipoMov == 'D' ? stod(monto) * -1 : stod(monto);
@@ -1321,13 +1328,19 @@ namespace MenuyExt
 
 		archivo.open("MovimientosTD.Txt");
 
-		string dia, mes, anio, descripcion, monto, textoMonto;
+		string dia, mes, anio, monto, textoMonto;
+		char descripcion[26];
 		double montoFinal = 0;
 		int contador = 0;
 		int espacio = 48;
 
-		while (archivo >> dia >> mes >> anio >> descripcion >> monto)
-		{
+		for(int i = 0; i < cantLin-11; i++)
+        {
+            archivo >> dia >> mes >> anio;
+            archivo.ignore();
+            archivo.get(descripcion, 26);
+            archivo.ignore();
+            archivo >> monto;
 
 			dia = stoi(dia) < 10 ? dia = "0" + dia : dia;
 			mes = stoi(mes) < 10 ? mes = "0" + mes : mes;
@@ -1395,13 +1408,19 @@ namespace MenuyExt
 
 		archivo.open("MovimientosTC.Txt");
 
-		string dia, mes, anio, descripcion, monto, textoMonto, cuotas;
+		string dia, mes, anio, monto, textoMonto, cuotas;
+		char descripcion[26];
 		double montoFinal = 0;
 		int contador = 0;
 		int espacio = 54;
 
-		while (archivo >> dia >> mes >> anio >> descripcion >> cuotas >> monto)
-		{
+		for(int i = 0; i < cantLin-11; i++)
+        {
+            archivo >> dia >> mes >> anio;
+            archivo.ignore();
+            archivo.get(descripcion, 26);
+            archivo.ignore();
+            archivo >> cuotas >> monto;
 
 			dia = stoi(dia) < 10 ? dia = "0" + dia : dia;
 			mes = stoi(mes) < 10 ? mes = "0" + mes : mes;
@@ -1442,7 +1461,7 @@ namespace MenuyExt
 	// Opción de menú para registrar un depósito.
 	void Menu_Dep()
 	{
-		MostrarCursor(); 
+		MostrarCursor();
 		Plantilla("Deposito");
 		_textcolor(3);
 		float cap;
@@ -1528,7 +1547,7 @@ namespace MenuyExt
 	// Opción de menú para registrar una compra.
 	void Menu_Com()
 	{
-		MostrarCursor(); 
+		MostrarCursor();
 		Plantilla("Compra");
 
 		double TOTALAC = CalcularTotalCA("MovimientosCA.Txt");
