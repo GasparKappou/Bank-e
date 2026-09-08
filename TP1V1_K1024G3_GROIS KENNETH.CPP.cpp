@@ -1107,12 +1107,16 @@ namespace MenuyExt
 		} while (tasa < 0);
 	}
 
+    float CalculoPF(float cap, float tasa, int time){
+        return ((cap * time * tasa) / 36500.0);
+    }
+
 	// Opción de menú para simular un plazo fijo.
 	void Menu_SPF()
 	{
 		OcultarCursor();
 		Plantilla("Simulación Plazo Fijo");
-		float cap, tasa;
+		float cap = 0.0, tasa = 0.0;
 		int time;
 		datosINV(cap, tasa, time);
 		_gotoxy(30, 14);
@@ -1120,8 +1124,9 @@ namespace MenuyExt
 
 		Sleep(1000);
 		_textcolor(2);
+		float inv = CalculoPF(cap, tasa, time);
 		_gotoxy(30, 15);
-		cout << "Interés: $" << fixed << setprecision(2) << (cap * time * tasa) / 36500.0;
+		cout << "Interés: $" << fixed << setprecision(2) << inv;
 
 		_gotoxy(10, 20);
 		Pausa();
@@ -1133,7 +1138,7 @@ namespace MenuyExt
 	{
 		OcultarCursor();
 		Plantilla("Inversion Plazo Fijo");
-		float cap, tasa;
+		float cap = 0.0, tasa = 0.0;
 		int time;
 		datosINV(cap, tasa, time);
 		MostrarCursor();
@@ -1142,7 +1147,7 @@ namespace MenuyExt
 
 		Sleep(1000);
 		_textcolor(2);
-		float inv = (cap * time * tasa) / 36500.0;
+		float inv = CalculoPF(cap, tasa, time);
 		_gotoxy(30, 15);
 		cout << "Interés: $" << fixed << setprecision(2) << inv;
 
