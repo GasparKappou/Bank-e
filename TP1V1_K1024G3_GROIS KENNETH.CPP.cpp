@@ -912,16 +912,8 @@ namespace MenuyExt
 	// tamaño de la ventana
 	void RedimensionarVentana(int ancho, int alto)
 	{
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-		COORD coord = {(SHORT)ancho, (SHORT)alto};
-		SMALL_RECT rect = {0, 0, (SHORT)(ancho - 1), (SHORT)(alto - 1)};
-
-		SMALL_RECT tempRect = {0, 0, 1, 1};
-		SetConsoleWindowInfo(hConsole, TRUE, &tempRect);
-
-		SetConsoleScreenBufferSize(hConsole, coord);
-		SetConsoleWindowInfo(hConsole, TRUE, &rect);
+	    string comando = "mode con cols=" + to_string(ancho) + " lines=" + to_string(alto);
+	    system(comando.c_str());
 	}
 
 	// limpia y construye de nuevo el marco
@@ -1294,11 +1286,12 @@ namespace MenuyExt
 
 		Sleep(3000);
 		Pausa(cantLin + 4);
+		RedimensionarVentana(85, 24);
 		_textbackground(NEGRO);
 		_clrscr();
-		RedimensionarVentana(85, 24);
 		Marco(2, 2, 81, 23, AZUL_CLARO);
 		OcultarCursor();
+
 	}
 
 	// Opción de menú para visualizar los movimientos de tarjeta de débito.
@@ -1374,12 +1367,12 @@ namespace MenuyExt
 
 		Sleep(3000);
 		Pausa(cantLin + 4);
+		RedimensionarVentana(85, 24);
 		_textbackground(NEGRO);
 		_clrscr();
-		RedimensionarVentana(85, 24);
 		Marco(2, 2, 81, 23, AZUL_CLARO);
-
 		OcultarCursor();
+
 	}
 
 	// Opción de menú para visualizar los movimientos de tarjeta de crédito.
@@ -1455,12 +1448,12 @@ namespace MenuyExt
 
 		Sleep(3000);
 		Pausa(cantLin + 4);
+		RedimensionarVentana(85, 24);
 		_textbackground(NEGRO);
 		_clrscr();
-		RedimensionarVentana(85, 24);
 		Marco(2, 2, 81, 23, AZUL_CLARO);
-
 		OcultarCursor();
+
 	}
 
 	// Opción de menú para registrar un depósito.
