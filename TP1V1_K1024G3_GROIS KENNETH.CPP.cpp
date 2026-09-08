@@ -1043,7 +1043,7 @@ namespace MenuyExt
 		OcultarCursor();
 	}
 
-	void datosINV(float &cap, float &tasa, int time)
+	void datosINV(float &cap, float &tasa, int &time)
 	{
 		_textcolor(15);
 		_gotoxy(30, 7);
@@ -1117,7 +1117,7 @@ namespace MenuyExt
 		OcultarCursor();
 		Plantilla("Simulación Plazo Fijo");
 		float cap = 0.0, tasa = 0.0;
-		int time;
+		int time = 0;
 		datosINV(cap, tasa, time);
 		_gotoxy(30, 14);
 		Borrado(40);
@@ -1139,7 +1139,7 @@ namespace MenuyExt
 		OcultarCursor();
 		Plantilla("Inversion Plazo Fijo");
 		float cap = 0.0, tasa = 0.0;
-		int time;
+		int time = 0;
 		datosINV(cap, tasa, time);
 		MostrarCursor();
 		_gotoxy(30, 14);
