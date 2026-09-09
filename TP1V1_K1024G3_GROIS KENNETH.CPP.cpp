@@ -1241,12 +1241,13 @@ namespace MenuyExt
 		_gotoxy(margen, 8);
 		cout << "     Fecha T Descripcion                      Debe       Haber        Saldo" << endl;
 		_gotoxy(margen, 9);
-		cout << Separador(75, '-');
+		cout << Separador(75, '-') << endl;
 		_textcolor(ROJO_CLARO);
 
 		archivo.open("MovimientosCA.Txt");
 
-		string dia, mes, anio, monto;
+		short dia, mes, anio;
+		float monto;
 		char descripcion[26];
 		char tipoMov;
 		int contador = 0, saldo = 75;
@@ -1254,29 +1255,17 @@ namespace MenuyExt
 
 		for(int i = 0; i < cantLin-11; i++)
         {
-            archivo >> dia >> mes >> anio >> tipoMov;
-            archivo.ignore();
-            archivo.get(descripcion, 26);
+			archivo >> dia >> mes >> anio >> tipoMov;
+			archivo.ignore();
+            archivo.get(descripcion, 25);
             archivo.ignore();
             archivo >> monto;
+            _gotoxy(4, 10+i);
+            montoFinal += tipoMov == 'D' ? monto* -1: monto;
 
-
-            dia = stoi(dia) < 10 ? dia = "0" + dia : dia;
-			mes = stoi(mes) < 10 ? mes = "0" + mes : mes;
-			int espacio = tipoMov == 'D' ? 50 : 62;
-			montoFinal += tipoMov == 'D' ? stod(monto) * -1 : stod(monto);
-			stod(monto);
-
-			ostringstream stream;
-			stream << fixed << setprecision(2) << montoFinal;
-
-			string textoMonto = stream.str();
-			MnsgBox(margen, 10 + contador, textoMonto, 'd', saldo);
-			MnsgBox(margen, 10 + contador, monto, 'd', espacio);
-			linea = dia + " " + mes + " " + anio + " " + tipoMov + " " + descripcion;
-			_gotoxy(margen, 10 + contador);
-			contador++;
-			cout << linea << endl;
+            cout << setfill('0') << setw(2) << dia << " " << setw(2) << mes << " " << setw(2) << anio << " " << tipoMov << " ";
+            cout << setfill(' ') << descripcion <<  " " << setw(tipoMov == 'D' ? 12 : 24);
+            cout << fixed << setprecision(2) <<  monto << " " << setw(tipoMov == 'D' ? 24 : 12) << montoFinal;
 		}
 
 		archivo.close();
@@ -1326,14 +1315,16 @@ namespace MenuyExt
 
 		archivo.open("MovimientosTD.Txt");
 
-		string dia, mes, anio, monto, textoMonto;
+		short dia, mes, anio;
+		string textoMonto;
+		float monto;
 		char descripcion[26];
 		double montoFinal = 0;
 		int contador = 0;
 		int espacio = 48;
 
 		for(int i = 0; i < cantLin-11; i++)
-        {
+        {/*
             archivo >> dia >> mes >> anio;
             archivo.ignore();
             archivo.get(descripcion, 26);
@@ -1342,7 +1333,7 @@ namespace MenuyExt
 
 			dia = stoi(dia) < 10 ? dia = "0" + dia : dia;
 			mes = stoi(mes) < 10 ? mes = "0" + mes : mes;
-			montoFinal += stod(monto);
+
 
 			ostringstream stream;
 			stream << fixed << setprecision(2) << montoFinal;
@@ -1352,7 +1343,17 @@ namespace MenuyExt
 			linea = dia + " " + mes + " " + anio + " " + descripcion;
 			_gotoxy(margen, cantLin - 2 - contador);
 			contador++;
-			cout << linea << endl;
+			cout << linea << endl;*/
+
+			archivo >> dia >> mes >> anio;
+			archivo.ignore();
+            archivo.get(descripcion, 26);
+            archivo.ignore();
+            archivo >> monto;
+            _gotoxy(17, 10+i);
+            montoFinal += monto;
+            cout << setfill('0') << setw(2) << dia << " " << setw(2) << mes << " " << setw(2) << anio << " ";
+            cout << setfill(' ') << descripcion <<  " " << fixed << setw(11) << std::right << setprecision(2) <<  monto;
 		}
 
 		archivo.close();
@@ -1361,7 +1362,7 @@ namespace MenuyExt
 		cout << Separador(48, '-');
 		MnsgBox(margen, cantLin, textoMonto, 'd', 48);
 		_gotoxy(margen, cantLin);
-		cout << "                        Total TD: $" << endl;
+		cout << "                        Total TD: $" << setw(13) << std::right << montoFinal << endl;
 		_gotoxy(margen, cantLin + 1);
 		cout << Separador(48, '-');
 
@@ -1406,14 +1407,16 @@ namespace MenuyExt
 
 		archivo.open("MovimientosTC.Txt");
 
-		string dia, mes, anio, monto, textoMonto, cuotas;
+		short dia, mes, anio;
+		float monto, textoMonto;
+		string cuotas;
 		char descripcion[26];
 		double montoFinal = 0;
 		int contador = 0;
 		int espacio = 54;
 
 		for(int i = 0; i < cantLin-11; i++)
-        {
+        { /*
             archivo >> dia >> mes >> anio;
             archivo.ignore();
             archivo.get(descripcion, 26);
@@ -1433,16 +1436,26 @@ namespace MenuyExt
 			linea = dia + " " + mes + " " + anio + " " + descripcion;
 			_gotoxy(margen, cantLin - 2 - contador);
 			contador++;
-			cout << linea << endl;
+			cout << linea << endl;*/
+			archivo >> dia >> mes >> anio;
+			archivo.ignore();
+            archivo.get(descripcion, 26);
+            archivo.ignore();
+            archivo >> cuotas >> monto;
+
+            _gotoxy(14, 10+i);
+            montoFinal += monto;
+            cout << setfill('0') << setw(2) << dia << " " << setw(2) << mes << " " << setw(2) << anio << " ";
+            cout << setfill(' ') << descripcion <<  " " << setw(5) << cuotas << fixed << setw(12) << std::right << setprecision(2) <<  monto;
 		}
 		archivo.close();
 
 		_textcolor(BLANCO);
 		_gotoxy(margen, cantLin - 1);
 		cout << Separador(54, '-');
-		MnsgBox(margen, cantLin, textoMonto, 'd', 54);
+		//MnsgBox(margen, cantLin, textoMonto, 'd', 54);
 		_gotoxy(margen, cantLin);
-		cout << "                        Total A Pagar: $" << endl;
+		cout << "                        Total A Pagar: $" << setw(14) << std::right << montoFinal << endl;
 		_gotoxy(margen, cantLin + 1);
 		cout << Separador(54, '-');
 
@@ -1953,7 +1966,7 @@ void SistemaHomeBanking()
 		{46752369, "Diaz Carla", "15/04/2007", "cdiaz", "zxcvb", "11 2021 2286", "cdiz@gmail.com", "Corrientes 8000", "CA-004", "20481639"},
 		{47598621, "Ruiz Pedro", "20/05/2008", "pruiz", "contr2", "11 6767 9090", "pruiz@gmail.com", "Rivadavia 1245", "CA-005", "95847210"}};
 
-	short t = MenuLogin(listaUsuarios);
+	short t = 0;
 	if (t != -1)
 	{
 		Menu_User(listaUsuarios, t);
