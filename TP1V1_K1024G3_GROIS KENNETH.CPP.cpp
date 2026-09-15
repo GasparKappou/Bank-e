@@ -959,7 +959,7 @@ namespace MenuyExt
 		}
 	}
 
-	void Plantilla(char titulo[])
+	void Plantilla(string titulo)
 	{
 		LimpiarInteriorMarco(2, 2, 81, 22);
 		_textcolor(3);
@@ -1966,7 +1966,7 @@ void SistemaHomeBanking()
 		{46752369, "Diaz Carla", "15/04/2007", "cdiaz", "zxcvb", "11 2021 2286", "cdiz@gmail.com", "Corrientes 8000", "CA-004", "20481639"},
 		{47598621, "Ruiz Pedro", "20/05/2008", "pruiz", "contr2", "11 6767 9090", "pruiz@gmail.com", "Rivadavia 1245", "CA-005", "95847210"}};
 
-	short t = 0;
+	short t = MenuLogin(listaUsuarios);
 	if (t != -1)
 	{
 		Menu_User(listaUsuarios, t);
