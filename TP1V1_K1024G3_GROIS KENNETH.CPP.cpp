@@ -938,7 +938,14 @@ namespace MenuyExt
 			cout << " ";
 		}
 	}
-
+	
+	void ReemplazarChar(char cad[], char buscado, char nuevo)
+	{
+	    for (int i = 0; cad[i] != '\0'; i++)
+	        if (cad[i] == buscado)
+	            cad[i] = nuevo;
+	}
+	
 	// Impresion de menu
 	void GenMenu(char aMenu[][25], short tam)
 	{
@@ -1261,6 +1268,7 @@ namespace MenuyExt
 			for (int i = inicio; i < fin; i++)
 			{
 				_gotoxy(margen, 9 + (i - inicio));
+				ReemplazarChar(datos_ca[i].detalle, '_', ' ');
 				cout << setfill('0') << setw(2) << datos_ca[i].dia << " " << setw(2) << datos_ca[i].mes << " "
 					 << setw(2) << datos_ca[i].anio << " " << datos_ca[i].tipoMov << " ";
 				cout << setfill(' ') << left << setw(25) << datos_ca[i].detalle << " " << right
@@ -1351,6 +1359,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 			for (int i = inicio; i < fin; i++)
 			{
 				_gotoxy(margen, 9 + (i - inicio));
+				ReemplazarChar(datos_td[i].detalle, '_', ' ');
 				cout << setfill('0') << setw(2) << datos_td[i].dia << " " << setw(2) << datos_td[i].mes << " "
 					 << setw(4) << datos_td[i].anio << " ";
 				cout << setfill(' ') << left << setw(25) << datos_td[i].detalle << " " << fixed << right
@@ -1441,6 +1450,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 			for (int i = inicio; i < fin; i++)
 			{
 				_gotoxy(margen, 9 + (i - inicio));
+				ReemplazarChar(datos_tc[i].detalle, '_', ' ');
 				cout << setfill('0') << setw(2) << datos_tc[i].dia << " " << setw(2) << datos_tc[i].mes << " "
 					 << setw(4) << datos_tc[i].anio << " ";
 				cout << setfill(' ') << left << setw(25) << datos_tc[i].detalle << " " << left << setw(7)
@@ -1489,6 +1499,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 		Sleep(10);
 		OcultarCursor();
 	}
+
 
 	// Opción de menú para registrar un depósito.
 	void Menu_Dep()
@@ -1540,10 +1551,13 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 		_gotoxy(30, 11);
 		Borrado(40);
 
+		cin.ignore(1000, '\n');
 		do
 		{
 			_gotoxy(40, 13);
-			cin >> det;
+			Borrado(40);
+			_gotoxy(40, 13);
+			getline(cin, det);
 			if (det.length() > 25)
 			{
 				_gotoxy(40, 13);
@@ -1554,6 +1568,9 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 				_textcolor(14);
 			}
 		} while (det.length() > 25);
+
+		for (auto &c : det)
+			if (c == ' ') c = '_';
 
 		_gotoxy(30, 14);
 		Borrado(40);
@@ -1628,10 +1645,13 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 			} while (cap < 0);
 			_gotoxy(30, 11);
 			Borrado(40);
+			cin.ignore(1000, '\n');
 			do
 			{
 				_gotoxy(40, 13);
-				cin >> det;
+				Borrado(40);
+				_gotoxy(40, 13);
+				getline(cin, det);
 				if (det.length() > 25)
 				{
 					_gotoxy(40, 13);
@@ -1642,6 +1662,10 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 					_textcolor(14);
 				}
 			} while (det.length() > 25);
+
+			for (auto &c : det)
+				if (c == ' ') c = '_';
+
 			_gotoxy(30, 14);
 			Borrado(40);
 
