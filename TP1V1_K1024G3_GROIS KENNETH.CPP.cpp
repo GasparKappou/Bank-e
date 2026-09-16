@@ -1558,7 +1558,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 			Borrado(40);
 			_gotoxy(40, 13);
 			getline(cin, det);
-			if (det.length() > 25)
+			if (det.length() > 24)
 			{
 				_gotoxy(40, 13);
 				Borrado(40);
@@ -1567,7 +1567,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 				cout << "*Error, detalle demasiado largo";
 				_textcolor(14);
 			}
-		} while (det.length() > 25);
+		} while (det.length() > 24);
 
 		for (auto &c : det)
 			if (c == ' ') c = '_';
@@ -1652,7 +1652,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 				Borrado(40);
 				_gotoxy(40, 13);
 				getline(cin, det);
-				if (det.length() > 25)
+				if (det.length() > 24)
 				{
 					_gotoxy(40, 13);
 					Borrado(40);
@@ -1661,7 +1661,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 					cout << "*Error, detalle demasiado largo";
 					_textcolor(14);
 				}
-			} while (det.length() > 25);
+			} while (det.length() > 24);
 
 			for (auto &c : det)
 				if (c == ' ') c = '_';
