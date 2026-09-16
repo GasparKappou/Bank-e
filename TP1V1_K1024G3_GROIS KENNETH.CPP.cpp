@@ -1218,255 +1218,276 @@ namespace MenuyExt
 	// Opción de menú para visualizar los movimientos de caja de ahorro.
 	void Menu_MCA(RegUsuario listaUsuarios[], short t)
 	{
-		ifstream archivo("MovimientosCA.Txt");
-		string linea = "";
-		int cantLin = 11;
-		int margen = 4;
-		while (getline(archivo, linea))
+		const short FILAS_POR_PAGINA = 8;
+		const short margen = 4;
+
+		cargarMovimientosDesdeArchivos();
+
+		// Precalculamos el saldo acumulado para cada movimiento (más reciente -> más antiguo),
+		// así el valor de "Saldo" es correcto sin importar en qué página estemos parados.
+		double saldoAcumulado[MAX_MOVIMIENTOS];
+		double acumulado = 0;
+		for (int i = 0; i < cantDatosCA; i++)
 		{
-			cantLin++;
-		}
-		archivo.close();
-		RedimensionarVentana(85, cantLin + 8);
-		LimpiarInteriorMarco(2, 2, 85, cantLin + 6);
-		OcultarCursor();
-		Plantilla("Movimientos de Caja de Ahorro");
-		Marco(2, 2, 81, cantLin + 6, AZUL_CLARO);
-		_textcolor(BLANCO);
-		_gotoxy(10, 4);
-		FechaHoy();
-
-		_gotoxy(margen, 7);
-		cout << Separador(75, '-');
-		_gotoxy(margen, 8);
-		cout << "     Fecha T Descripcion                      Debe       Haber        Saldo" << endl;
-		_gotoxy(margen, 9);
-		cout << Separador(75, '-') << endl;
-		_textcolor(ROJO_CLARO);
-
-		archivo.open("MovimientosCA.Txt");
-
-		short dia, mes, anio;
-		float monto;
-		char descripcion[26];
-		char tipoMov;
-		int contador = 0, saldo = 75;
-		double montoFinal = 0;
-
-		for(int i = 0; i < cantLin-11; i++)
-        {
-			archivo >> dia >> mes >> anio >> tipoMov;
-			archivo.ignore();
-            archivo.get(descripcion, 25);
-            archivo.ignore();
-            archivo >> monto;
-            _gotoxy(4, 10+i);
-            montoFinal += tipoMov == 'D' ? monto* -1: monto;
-
-            cout << setfill('0') << setw(2) << dia << " " << setw(2) << mes << " " << setw(2) << anio << " " << tipoMov << " ";
-            cout << setfill(' ') << descripcion <<  " " << setw(tipoMov == 'D' ? 12 : 24);
-            cout << fixed << setprecision(2) <<  monto << " " << setw(tipoMov == 'D' ? 24 : 12) << montoFinal;
+			acumulado += (datos_ca[i].tipoMov == 'D') ? -datos_ca[i].importe : datos_ca[i].importe;
+			saldoAcumulado[i] = acumulado;
 		}
 
-		archivo.close();
-		_textcolor(BLANCO);
-		_gotoxy(margen, cantLin - 1);
-		cout << Separador(75, '-') << endl;
+		int totalPaginas = (cantDatosCA == 0) ? 1 : (cantDatosCA + FILAS_POR_PAGINA - 1) / FILAS_POR_PAGINA;
+		int pagina = 0;
+		bool salir = false;
 
-		Sleep(3000);
-		Pausa(cantLin + 4);
-		RedimensionarVentana(85, 24);
-		_textbackground(NEGRO);
-		_clrscr();
-		Marco(2, 2, 81, 23, AZUL_CLARO);
 		OcultarCursor();
 
+		do
+		{
+			LimpiarInteriorMarco(2, 2, 81, 22);
+			Plantilla("Movimientos de Caja de Ahorro");
+			_textcolor(BLANCO);
+			_gotoxy(10, 4);
+			FechaHoy();
+
+			_gotoxy(margen, 6);
+			cout << Separador(75, '-');
+			_gotoxy(margen, 7);
+			cout << "     Fecha T Descripcion                      Debe       Haber        Saldo";
+			_gotoxy(margen, 8);
+			cout << Separador(75, '-');
+
+			int inicio = pagina * FILAS_POR_PAGINA;
+			int fin = (inicio + FILAS_POR_PAGINA < cantDatosCA) ? inicio + FILAS_POR_PAGINA : cantDatosCA;
+
+			_textcolor(ROJO_CLARO);
+			for (int i = inicio; i < fin; i++)
+			{
+				_gotoxy(margen, 9 + (i - inicio));
+				cout << setfill('0') << setw(2) << datos_ca[i].dia << " " << setw(2) << datos_ca[i].mes << " "
+					 << setw(2) << datos_ca[i].anio << " " << datos_ca[i].tipoMov << " ";
+				cout << setfill(' ') << left << setw(25) << datos_ca[i].detalle << " " << right
+					 << setw(datos_ca[i].tipoMov == 'D' ? 12 : 24) << fixed << setprecision(2) << datos_ca[i].importe
+					 << " " << setw(datos_ca[i].tipoMov == 'D' ? 24 : 12) << saldoAcumulado[i];
+			}
+
+			_textcolor(BLANCO);
+			_gotoxy(margen, 9 + FILAS_POR_PAGINA);
+			cout << Separador(75, '-');
+			_gotoxy(margen, 10 + FILAS_POR_PAGINA);
+			cout << "Página " << (pagina + 1) << " de " << totalPaginas;
+			_gotoxy(margen, 11 + FILAS_POR_PAGINA);
+			_textcolor(14);
+			cout << "IZQUIERDA: anterior   DERECHA: siguiente   ESPACIO/ESC: salir";
+
+			GetAsyncKeyState(VK_LEFT);
+			GetAsyncKeyState(VK_RIGHT);
+			GetAsyncKeyState(VK_ESCAPE);
+			GetAsyncKeyState(VK_SPACE);
+			bool tecla = false;
+			while (!tecla)
+			{
+				Sleep(150);
+				if (GetAsyncKeyState(VK_ESCAPE) || GetAsyncKeyState(VK_SPACE))
+				{
+					salir = true;
+					tecla = true;
+				}
+				else if (GetAsyncKeyState(VK_LEFT))
+				{
+					if (pagina > 0)
+						pagina--;
+					tecla = true;
+				}
+				else if (GetAsyncKeyState(VK_RIGHT))
+				{
+					if (pagina < totalPaginas - 1)
+						pagina++;
+					tecla = true;
+				}
+			}
+		} while (!salir);
+		
+		while ((GetAsyncKeyState(VK_ESCAPE) & 0x8000) || (GetAsyncKeyState(VK_SPACE) & 0x8000))
+		Sleep(10);
+
+		OcultarCursor();
 	}
 
 	// Opción de menú para visualizar los movimientos de tarjeta de débito.
-	void Menu_MTD(RegUsuario listaUsuarios[], short t)
+void Menu_MTD(RegUsuario listaUsuarios[], short t)
 	{
-		ifstream archivo("MovimientosTD.Txt");
-		string linea = "";
-		int cantLin = 11;
-		int margen = 17;
+		const short FILAS_POR_PAGINA = 8;
+		const short margen = 17;
 
-		while (getline(archivo, linea))
+		cargarMovimientosDesdeArchivos();
+
+		double total = 0;
+		for (int i = 0; i < cantDatosTD; i++)
+			total += datos_td[i].importe;
+
+		int totalPaginas = (cantDatosTD == 0) ? 1 : (cantDatosTD + FILAS_POR_PAGINA - 1) / FILAS_POR_PAGINA;
+		int pagina = 0;
+		bool salir = false;
+
+		OcultarCursor();
+
+		do
 		{
-			cantLin++;
-		}
-		archivo.close();
+			LimpiarInteriorMarco(2, 2, 81, 22);
+			Plantilla("Movimientos de Tarjeta de Débito");
+			_textcolor(BLANCO);
+			_gotoxy(10, 4);
+			FechaHoy();
 
-		RedimensionarVentana(85, cantLin + 8);
-		LimpiarInteriorMarco(2, 2, 85, cantLin + 6);
+			_gotoxy(margen, 6);
+			cout << Separador(48, '-');
+			_gotoxy(margen, 7);
+			cout << "  Fecha    " << left << setw(25) << "Descripcion" << " " << right << setw(11) << "Importe";
+			_gotoxy(margen, 8);
+			cout << Separador(48, '-');
+
+			int inicio = pagina * FILAS_POR_PAGINA;
+			int fin = (inicio + FILAS_POR_PAGINA < cantDatosTD) ? inicio + FILAS_POR_PAGINA : cantDatosTD;
+
+			_textcolor(ROJO_CLARO);
+			for (int i = inicio; i < fin; i++)
+			{
+				_gotoxy(margen, 9 + (i - inicio));
+				cout << setfill('0') << setw(2) << datos_td[i].dia << " " << setw(2) << datos_td[i].mes << " "
+					 << setw(4) << datos_td[i].anio << " ";
+				cout << setfill(' ') << left << setw(25) << datos_td[i].detalle << " " << fixed << right
+					 << setw(11) << setprecision(2) << datos_td[i].importe;
+			}
+
+			_textcolor(BLANCO);
+			_gotoxy(margen, 9 + FILAS_POR_PAGINA);
+			cout << Separador(48, '-');
+			_gotoxy(margen, 10 + FILAS_POR_PAGINA);
+			cout << "Total TD: $" << fixed << setprecision(2) << total;
+			_gotoxy(margen, 11 + FILAS_POR_PAGINA);
+			cout << "Página " << (pagina + 1) << " de " << totalPaginas;
+			_gotoxy(margen, 12 + FILAS_POR_PAGINA);
+			_textcolor(14);
+			cout << "IZQUIERDA: anterior   DERECHA: siguiente   ESPACIO/ESC: salir";
+
+			GetAsyncKeyState(VK_LEFT);
+			GetAsyncKeyState(VK_RIGHT);
+			GetAsyncKeyState(VK_ESCAPE);
+			GetAsyncKeyState(VK_SPACE);
+			bool tecla = false;
+			while (!tecla)
+			{
+				Sleep(150);
+				if (GetAsyncKeyState(VK_ESCAPE) || GetAsyncKeyState(VK_SPACE))
+				{
+					salir = true;
+					tecla = true;
+				}
+				else if (GetAsyncKeyState(VK_LEFT))
+				{
+					if (pagina > 0)
+						pagina--;
+					tecla = true;
+				}
+				else if (GetAsyncKeyState(VK_RIGHT))
+				{
+					if (pagina < totalPaginas - 1)
+						pagina++;
+					tecla = true;
+				}
+			}
+		} while (!salir);
+		while ((GetAsyncKeyState(VK_ESCAPE) & 0x8000) || (GetAsyncKeyState(VK_SPACE) & 0x8000))
+		Sleep(10);
 		OcultarCursor();
-		Plantilla("Movimientos de Tarjeta de Débito");
-		Marco(2, 2, 81, cantLin + 6, AZUL_CLARO);
-		_textcolor(BLANCO);
-		_gotoxy(10, 4);
-		FechaHoy();
-		_gotoxy(margen, 7);
-		cout << Separador(48, '-');
-		_gotoxy(margen, 8);
-		cout << "     Fecha Descripcion                   Importe" << endl;
-		_gotoxy(margen, 9);
-		cout << Separador(48, '-');
-		_textcolor(ROJO_CLARO);
-
-		archivo.open("MovimientosTD.Txt");
-
-		short dia, mes, anio;
-		string textoMonto;
-		float monto;
-		char descripcion[26];
-		double montoFinal = 0;
-		int contador = 0;
-		int espacio = 48;
-
-		for(int i = 0; i < cantLin-11; i++)
-        {/*
-            archivo >> dia >> mes >> anio;
-            archivo.ignore();
-            archivo.get(descripcion, 26);
-            archivo.ignore();
-            archivo >> monto;
-
-			dia = stoi(dia) < 10 ? dia = "0" + dia : dia;
-			mes = stoi(mes) < 10 ? mes = "0" + mes : mes;
-
-
-			ostringstream stream;
-			stream << fixed << setprecision(2) << montoFinal;
-
-			textoMonto = stream.str();
-			MnsgBox(margen, cantLin - 2 - contador, monto, 'd', espacio);
-			linea = dia + " " + mes + " " + anio + " " + descripcion;
-			_gotoxy(margen, cantLin - 2 - contador);
-			contador++;
-			cout << linea << endl;*/
-
-			archivo >> dia >> mes >> anio;
-			archivo.ignore();
-            archivo.get(descripcion, 26);
-            archivo.ignore();
-            archivo >> monto;
-            _gotoxy(17, 10+i);
-            montoFinal += monto;
-            cout << setfill('0') << setw(2) << dia << " " << setw(2) << mes << " " << setw(2) << anio << " ";
-            cout << setfill(' ') << descripcion <<  " " << fixed << setw(11) << std::right << setprecision(2) <<  monto;
-		}
-
-		archivo.close();
-		_textcolor(BLANCO);
-		_gotoxy(margen, cantLin - 1);
-		cout << Separador(48, '-');
-		MnsgBox(margen, cantLin, textoMonto, 'd', 48);
-		_gotoxy(margen, cantLin);
-		cout << "                        Total TD: $" << setw(13) << std::right << montoFinal << endl;
-		_gotoxy(margen, cantLin + 1);
-		cout << Separador(48, '-');
-
-		Sleep(3000);
-		Pausa(cantLin + 4);
-		RedimensionarVentana(85, 24);
-		_textbackground(NEGRO);
-		_clrscr();
-		Marco(2, 2, 81, 23, AZUL_CLARO);
-		OcultarCursor();
-
 	}
 
 	// Opción de menú para visualizar los movimientos de tarjeta de crédito.
 	void Menu_MTC(RegUsuario listaUsuarios[], short t)
 	{
-		ifstream archivo("MovimientosTC.Txt");
-		string linea = "";
-		int cantLin = 11;
-		int margen = 14;
-		while (getline(archivo, linea))
+		const short FILAS_POR_PAGINA = 8;
+		const short margen = 14;
+
+		cargarMovimientosDesdeArchivos();
+
+		double total = 0;
+		for (int i = 0; i < cantDatosTC; i++)
+			total += datos_tc[i].importe;
+
+		int totalPaginas = (cantDatosTC == 0) ? 1 : (cantDatosTC + FILAS_POR_PAGINA - 1) / FILAS_POR_PAGINA;
+		int pagina = 0;
+		bool salir = false;
+
+		OcultarCursor();
+
+		do
 		{
-			cantLin++;
-		}
-		archivo.close();
+			LimpiarInteriorMarco(2, 2, 81, 22);
+			Plantilla("Movimientos de Tarjeta de Crédito");
+			_textcolor(BLANCO);
+			_gotoxy(10, 4);
+			FechaHoy();
 
-		RedimensionarVentana(85, cantLin + 8);
-		LimpiarInteriorMarco(2, 2, 85, cantLin + 6);
+			_gotoxy(margen, 6);
+			cout << Separador(54, '-');
+			_gotoxy(margen, 7);
+			cout << "  Fecha    " << left << setw(25) << "Descripcion" << " " << left << setw(7) << "Cuotas"
+				 << right << setw(10) << "Importe";
+			_gotoxy(margen, 8);
+			cout << Separador(54, '-');
+
+			int inicio = pagina * FILAS_POR_PAGINA;
+			int fin = (inicio + FILAS_POR_PAGINA < cantDatosTC) ? inicio + FILAS_POR_PAGINA : cantDatosTC;
+
+			_textcolor(ROJO_CLARO);
+			for (int i = inicio; i < fin; i++)
+			{
+				_gotoxy(margen, 9 + (i - inicio));
+				cout << setfill('0') << setw(2) << datos_tc[i].dia << " " << setw(2) << datos_tc[i].mes << " "
+					 << setw(4) << datos_tc[i].anio << " ";
+				cout << setfill(' ') << left << setw(25) << datos_tc[i].detalle << " " << left << setw(7)
+					 << datos_tc[i].cuotas << fixed << right << setw(10) << setprecision(2) << datos_tc[i].importe;
+			}
+
+			_textcolor(BLANCO);
+			_gotoxy(margen, 9 + FILAS_POR_PAGINA);
+			cout << Separador(54, '-');
+			_gotoxy(margen, 10 + FILAS_POR_PAGINA);
+			cout << "Total A Pagar: $" << fixed << setprecision(2) << total;
+			_gotoxy(margen, 11 + FILAS_POR_PAGINA);
+			cout << "Página " << (pagina + 1) << " de " << totalPaginas;
+			_gotoxy(margen, 12 + FILAS_POR_PAGINA);
+			_textcolor(14);
+			cout << "IZQUIERDA: anterior   DERECHA: siguiente   ESPACIO/ESC: salir";
+
+			GetAsyncKeyState(VK_LEFT);
+			GetAsyncKeyState(VK_RIGHT);
+			GetAsyncKeyState(VK_ESCAPE);
+			GetAsyncKeyState(VK_SPACE);
+			bool tecla = false;
+			while (!tecla)
+			{
+				Sleep(150);
+				if (GetAsyncKeyState(VK_ESCAPE) || GetAsyncKeyState(VK_SPACE))
+				{
+					salir = true;
+					tecla = true;
+				}
+				else if (GetAsyncKeyState(VK_LEFT))
+				{
+					if (pagina > 0)
+						pagina--;
+					tecla = true;
+				}
+				else if (GetAsyncKeyState(VK_RIGHT))
+				{
+					if (pagina < totalPaginas - 1)
+						pagina++;
+					tecla = true;
+				}
+			}
+		} while (!salir);
+		while ((GetAsyncKeyState(VK_ESCAPE) & 0x8000) || (GetAsyncKeyState(VK_SPACE) & 0x8000))
+		Sleep(10);
 		OcultarCursor();
-		Plantilla("Movimientos de Tarjeta de Crédito");
-		Marco(2, 2, 81, cantLin + 6, AZUL_CLARO);
-		_textcolor(BLANCO);
-		_gotoxy(10, 4);
-		FechaHoy();
-		_gotoxy(margen, 7);
-		cout << Separador(54, '-');
-		_gotoxy(margen, 8);
-		cout << "     Fecha Descripcion              Cuotas     Importe" << endl;
-		_gotoxy(margen, 9);
-		cout << Separador(54, '-');
-		_textcolor(ROJO_CLARO);
-
-		archivo.open("MovimientosTC.Txt");
-
-		short dia, mes, anio;
-		float monto, textoMonto;
-		string cuotas;
-		char descripcion[26];
-		double montoFinal = 0;
-		int contador = 0;
-		int espacio = 54;
-
-		for(int i = 0; i < cantLin-11; i++)
-        { /*
-            archivo >> dia >> mes >> anio;
-            archivo.ignore();
-            archivo.get(descripcion, 26);
-            archivo.ignore();
-            archivo >> cuotas >> monto;
-
-			dia = stoi(dia) < 10 ? dia = "0" + dia : dia;
-			mes = stoi(mes) < 10 ? mes = "0" + mes : mes;
-			montoFinal += stod(monto);
-
-			ostringstream stream;
-			stream << fixed << setprecision(2) << montoFinal;
-
-			textoMonto = stream.str();
-			MnsgBox(margen, cantLin - 2 - contador, monto, 'd', espacio);
-			MnsgBox(margen, cantLin - 2 - contador, cuotas, 'd', espacio - 12);
-			linea = dia + " " + mes + " " + anio + " " + descripcion;
-			_gotoxy(margen, cantLin - 2 - contador);
-			contador++;
-			cout << linea << endl;*/
-			archivo >> dia >> mes >> anio;
-			archivo.ignore();
-            archivo.get(descripcion, 26);
-            archivo.ignore();
-            archivo >> cuotas >> monto;
-
-            _gotoxy(14, 10+i);
-            montoFinal += monto;
-            cout << setfill('0') << setw(2) << dia << " " << setw(2) << mes << " " << setw(2) << anio << " ";
-            cout << setfill(' ') << descripcion <<  " " << setw(5) << cuotas << fixed << setw(12) << std::right << setprecision(2) <<  monto;
-		}
-		archivo.close();
-
-		_textcolor(BLANCO);
-		_gotoxy(margen, cantLin - 1);
-		cout << Separador(54, '-');
-		//MnsgBox(margen, cantLin, textoMonto, 'd', 54);
-		_gotoxy(margen, cantLin);
-		cout << "                        Total A Pagar: $" << setw(14) << std::right << montoFinal << endl;
-		_gotoxy(margen, cantLin + 1);
-		cout << Separador(54, '-');
-
-		Sleep(3000);
-		Pausa(cantLin + 4);
-		RedimensionarVentana(85, 24);
-		_textbackground(NEGRO);
-		_clrscr();
-		Marco(2, 2, 81, 23, AZUL_CLARO);
-		OcultarCursor();
-
 	}
 
 	// Opción de menú para registrar un depósito.
@@ -1966,7 +1987,7 @@ void SistemaHomeBanking()
 		{46752369, "Diaz Carla", "15/04/2007", "cdiaz", "zxcvb", "11 2021 2286", "cdiz@gmail.com", "Corrientes 8000", "CA-004", "20481639"},
 		{47598621, "Ruiz Pedro", "20/05/2008", "pruiz", "contr2", "11 6767 9090", "pruiz@gmail.com", "Rivadavia 1245", "CA-005", "95847210"}};
 
-	short t = MenuLogin(listaUsuarios);
+	short t = 0; //MenuLogin(listaUsuarios);
 	if (t != -1)
 	{
 		Menu_User(listaUsuarios, t);
