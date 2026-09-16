@@ -1603,7 +1603,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 			_gotoxy(30, 13);
 			cout << "Detalle: ";
 			_gotoxy(30, 16);
-			cout << "Monto D,C: ";
+			cout << "Monto D. Debito C. Credito: ";
 
 			_gotoxy(40, 7);
 			Borrado(40);
@@ -1667,7 +1667,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 			do
 			{
 				valido = true;
-				_gotoxy(41, 16);
+				_gotoxy(60, 16);
 				cin >> tipo;
 				tipo = toupper(tipo);
 
@@ -1699,7 +1699,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 				if (!valido)
 				{
 					Sleep(1500);
-					_gotoxy(40, 16);
+					_gotoxy(60, 16);
 					Borrado(40);
 					_gotoxy(30, 17);
 					Borrado(50);
