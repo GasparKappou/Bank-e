@@ -1793,6 +1793,11 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 		_gotoxy(25, 7);
 		cout << "Apellido Nombre" << setw(13) << "DNI" << " " << "CBU";
 
+		// Copia local: acá se ordena, el original queda intacto
+		RegUsuario copiaUsuarios[MAX_USUARIOS];
+		for (int i = 0; i < MAX_USUARIOS; i++)
+			copiaUsuarios[i] = listaUsuarios[i];
+
 		bool intercambio;
 
 		for (int i = 0; i < MAX_USUARIOS; i++)
@@ -1801,9 +1806,9 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 
 			for (int j = 0; j < MAX_USUARIOS - 1 - i; j++)
 			{
-				if (listaUsuarios[j].apellidoNombre[0] > listaUsuarios[j + 1].apellidoNombre[0])
+				if (strcmp(copiaUsuarios[j].apellidoNombre, copiaUsuarios[j + 1].apellidoNombre) > 0)
 				{
-					swap(listaUsuarios[j], listaUsuarios[j + 1]);
+					swap(copiaUsuarios[j], copiaUsuarios[j + 1]);
 					intercambio = true;
 				}
 			}
@@ -1817,11 +1822,11 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 		for (int i = 0; i < MAX_USUARIOS; i++)
 		{
 			_gotoxy(25, i + 9);
-			cout << listaUsuarios[i].apellidoNombre;
+			cout << copiaUsuarios[i].apellidoNombre;
 			_gotoxy(45, i + 9);
-			cout << listaUsuarios[i].dni;
+			cout << copiaUsuarios[i].dni;
 			_gotoxy(54, i + 9);
-			cout << listaUsuarios[i].cbu;
+			cout << copiaUsuarios[i].cbu;
 		}
 
 		Sleep(3000);
@@ -1829,6 +1834,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 		Pausa();
 		OcultarCursor();
 	}
+	
 
 	// Opción de menú para cerrar la sesión activa.
 	void Menu_CS()
