@@ -1620,7 +1620,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 			_gotoxy(30, 13);
 			cout << "Detalle: ";
 			_gotoxy(30, 16);
-			cout << "Monto D. Debito C. Credito: ";
+			cout << "Modo D. Debito C. Credito: ";
 
 			_gotoxy(40, 7);
 			Borrado(40);
@@ -2011,7 +2011,7 @@ void SistemaHomeBanking()
 
 	// Inicialización de los 5 usuarios
 	RegUsuario listaUsuarios[MAX_USUARIOS] = {
-		{45568423, "Juan Gonzalez", "01/01/2005", "jgonz", "12354", "11 1234 2586", "jgonz@gmail.com", "Tucuman 3500", "CA-001", "48392017"},
+		{45568423, "Gonzalez Juan", "01/01/2005", "jgonz", "12354", "11 1234 2586", "jgonz@gmail.com", "Tucuman 3500", "CA-001", "48392017"},
 		{40235468, "Gomez Ana", "05/02/2000", "agomez", "clave2", "11 1584 2186", "agomez@gmail.com", "Colon 5060", "CA-002", "07518426"},
 		{42136852, "Lopez Luis", "10/03/2002", "llopez", "qwert", "11 1110 8996", "llopez@gmail.com", "Cordoba 1240", "CA-003", "69130758"},
 		{46752369, "Diaz Carla", "15/04/2007", "cdiaz", "zxcvb", "11 2021 2286", "cdiz@gmail.com", "Corrientes 8000", "CA-004", "20481639"},
