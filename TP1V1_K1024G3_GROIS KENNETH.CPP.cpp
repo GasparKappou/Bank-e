@@ -1878,7 +1878,7 @@ namespace User
 	{
 
 		short i = 0;
-		short t;
+		short t = 0;
 		char UserNom[40];
 		long UserDNI;
 		char UserClav[20];
@@ -2005,13 +2005,13 @@ void SistemaHomeBanking()
 
 	// Inicialización de los 5 usuarios
 	RegUsuario listaUsuarios[MAX_USUARIOS] = {
-		{45568423, "Juan Gonzalez", "01/01/2005", "jgonz", "12354", "11 1234 2586", "jgonz@gmail.com", "Tucuman 3500", "CA-001", "48392017"},
-		{40235468, "Gomez Ana", "05/02/2000", "agomez", "clave2", "11 1584 2186", "agomez@gmail.com", "Colon 5060", "CA-002", "07518426"},
-		{42136852, "Lopez Luis", "10/03/2002", "llopez", "qwert", "11 1110 8996", "llopez@gmail.com", "Cordoba 1240", "CA-003", "69130758"},
 		{46752369, "Diaz Carla", "15/04/2007", "cdiaz", "zxcvb", "11 2021 2286", "cdiz@gmail.com", "Corrientes 8000", "CA-004", "20481639"},
+		{45568423, "Gomez Juan", "01/01/2005", "jgomz", "12354", "11 1234 2586", "jgomz@gmail.com", "Tucuman 3500", "CA-001", "48392017"},
+		{40235468, "Gonzalez Ana", "05/02/2000", "agonz", "clave2", "11 1584 2186", "agonz@gmail.com", "Colon 5060", "CA-002", "07518426"},
+		{42136852, "Lopez Luis", "10/03/2002", "llopez", "qwert", "11 1110 8996", "llopez@gmail.com", "Cordoba 1240", "CA-003", "69130758"},
 		{47598621, "Ruiz Pedro", "20/05/2008", "pruiz", "contr2", "11 6767 9090", "pruiz@gmail.com", "Rivadavia 1245", "CA-005", "95847210"}};
 
-	short t = 0; //MenuLogin(listaUsuarios);
+	short t = MenuLogin(listaUsuarios);
 	if (t != -1)
 	{
 		Menu_User(listaUsuarios, t);
