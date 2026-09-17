@@ -938,14 +938,14 @@ namespace MenuyExt
 			cout << " ";
 		}
 	}
-	
+
 	void ReemplazarChar(char cad[], char buscado, char nuevo)
 	{
 	    for (int i = 0; cad[i] != '\0'; i++)
 	        if (cad[i] == buscado)
 	            cad[i] = nuevo;
 	}
-	
+
 	// Impresion de menu
 	void GenMenu(char aMenu[][25], short tam)
 	{
@@ -1255,11 +1255,11 @@ namespace MenuyExt
 			FechaHoy();
 
 			_gotoxy(margen, 6);
-			cout << Separador(75, '-');
+			cout << Separador(74, '-');
 			_gotoxy(margen, 7);
-			cout << "     Fecha T Descripcion                      Debe       Haber        Saldo";
+			cout << "     Fecha T Descripcion                      Debe       Haber       Saldo";
 			_gotoxy(margen, 8);
-			cout << Separador(75, '-');
+			cout << Separador(74, '-');
 
 			int inicio = pagina * FILAS_POR_PAGINA;
 			int fin = (inicio + FILAS_POR_PAGINA < cantDatosCA) ? inicio + FILAS_POR_PAGINA : cantDatosCA;
@@ -1272,8 +1272,8 @@ namespace MenuyExt
 				cout << setfill('0') << setw(2) << datos_ca[i].dia << " " << setw(2) << datos_ca[i].mes << " "
 					 << setw(2) << datos_ca[i].anio << " " << datos_ca[i].tipoMov << " ";
 				cout << setfill(' ') << left << setw(25) << datos_ca[i].detalle << " " << right
-					 << setw(datos_ca[i].tipoMov == 'D' ? 12 : 24) << fixed << setprecision(2) << datos_ca[i].importe
-					 << " " << setw(datos_ca[i].tipoMov == 'D' ? 24 : 12) << saldoAcumulado[i];
+					 << setw(datos_ca[i].tipoMov == 'D' ? 11 : 23) << fixed << setprecision(2) << datos_ca[i].importe
+					 << " " << setw(datos_ca[i].tipoMov == 'D' ? 23 : 11) << saldoAcumulado[i];
 			}
 
 			_textcolor(BLANCO);
@@ -1312,7 +1312,7 @@ namespace MenuyExt
 				}
 			}
 		} while (!salir);
-		
+
 		while ((GetAsyncKeyState(VK_ESCAPE) & 0x8000) || (GetAsyncKeyState(VK_SPACE) & 0x8000))
 		Sleep(10);
 
