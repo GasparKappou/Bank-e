@@ -1724,7 +1724,7 @@ void Menu_MTD(RegUsuario listaUsuarios[], short t)
 				{
 					Sleep(1500);
 					_gotoxy(60, 16);
-					Borrado(40);
+					Borrado(10);
 					_gotoxy(30, 17);
 					Borrado(50);
 				}
