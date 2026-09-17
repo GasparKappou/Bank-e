@@ -2011,7 +2011,7 @@ void SistemaHomeBanking()
 		{42136852, "Lopez Luis", "10/03/2002", "llopez", "qwert", "11 1110 8996", "llopez@gmail.com", "Cordoba 1240", "CA-003", "69130758"},
 		{47598621, "Ruiz Pedro", "20/05/2008", "pruiz", "contr2", "11 6767 9090", "pruiz@gmail.com", "Rivadavia 1245", "CA-005", "95847210"}};
 
-	short t = MenuLogin(listaUsuarios);
+	short t = 0;//MenuLogin(listaUsuarios);
 	if (t != -1)
 	{
 		Menu_User(listaUsuarios, t);
